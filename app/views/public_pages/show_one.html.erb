@@ -1,0 +1,14 @@
+  <%
+    params[:action] = "show_one_partial"
+  %>
+  
+  <% form_remote_tag({
+        :url => url_for(params.reject{|k,v| ! ["controller","action","object","page_no"].include?(k)}),
+        :update => @show_one_div_id,
+        }) do %>
+
+    <div id="<%=@show_one_div_id%>">
+      <%= render :partial => 'show_one_partial', :layout => false %>
+    </div>
+  
+  <% end %>        

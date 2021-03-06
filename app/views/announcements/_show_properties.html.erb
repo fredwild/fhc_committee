@@ -1,0 +1,95 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   @ft_view_section = {}
+%>
+
+<!-- BEGIN-UID.user_ctrls -->
+
+<!-- END-UID.user_ctrls -->
+
+<% @ft_view_section[:ft_prop_title] = capture { %>
+<% if @show_item[:ft_prop_title] then %>
+<div class="show_iname">
+   <%= @announcement.iname %>
+</div>
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:topic] = capture { %>
+<% if @show_item[:topic] then %>
+
+  <!-- Topic -->
+
+  <div class="show_attr_group attr_group_announcement_topic ">      <!-- div10 -->
+    <div class="show_attr_label"> Topic </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@announcement.topic.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:description] = capture { %>
+<% if @show_item[:description] then %>
+
+  <!-- Description -->
+
+  <div class="show_attr_group attr_group_announcement_description ">      <!-- div10 -->
+    <div class="show_attr_label"> Description </div>                    <!-- div11 -->
+    <div class="show_attr_value multiline"><%= rc_format(@announcement.description.to_s,"description") %></div>   <!-- div12g -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:seq_no] = capture { %>
+<% if @show_item[:seq_no] then %>
+
+  <!-- Seq No -->
+
+  <div class="show_attr_group attr_group_announcement_seq_no ">      <!-- div10 -->
+    <div class="show_attr_label"> Seq No </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@announcement.seq_no.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+<% @ft_view_section[:task] = capture { %>
+<% if @show_item[:task] then %>
+
+    <!-- Task -->
+
+    <div class="show_attr_group attr_group_announcement_announcements">     <!-- div16b -->
+      <div class="show_attr_label"> Task </div>         <!-- div17b -->
+      <div class="show_attr_value"> <%= @announcement.task.nil? ? "" : link_to(@announcement.task.iname, url_show(@announcement.task)) %>&nbsp;</div>
+    </div>         <!-- end div16b -->
+
+<% end %>
+<% } %>
+
+<% @ft_view_section_order = []
+   @ft_view_section_order << :ft_prop_title
+   @ft_view_section_order << :topic
+   @ft_view_section_order << :description
+   @ft_view_section_order << :seq_no
+   @ft_view_section_order << :task
+%>
+
+<!-- BEGIN-UID.user_ordering -->
+
+<!-- END-UID.user_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+

@@ -1,0 +1,111 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   @ft_view_section = {}
+%>
+
+<!-- BEGIN-UID.user_ctrls -->
+
+<!-- END-UID.user_ctrls -->
+
+<% @ft_view_section[:ft_prop_title] = capture { %>
+<% if @show_item[:ft_prop_title] then %>
+<div class="show_iname">
+   <%= @committee_role.iname %>
+</div>
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:role_name] = capture { %>
+<% if @show_item[:role_name] then %>
+
+  <!-- Role Name -->
+
+  <div class="show_attr_group attr_group_committee_role_role_name ">      <!-- div10 -->
+    <div class="show_attr_label"> Role Name </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@committee_role.role_name.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:description] = capture { %>
+<% if @show_item[:description] then %>
+
+  <!-- Description -->
+
+  <div class="show_attr_group attr_group_committee_role_description ">      <!-- div10 -->
+    <div class="show_attr_label"> Description </div>                    <!-- div11 -->
+    <div class="show_attr_value multiline"><%= rc_format(@committee_role.description.to_s,"description") %></div>   <!-- div12g -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:calling_required] = capture { %>
+<% if @show_item[:calling_required] then %>
+
+  <!-- Calling Required -->
+
+  <div class="show_attr_group attr_group_committee_role_calling_required ">      <!-- div10 -->
+    <div class="show_attr_label"> Calling Required </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@committee_role.calling_required.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:name_tag_needed] = capture { %>
+<% if @show_item[:name_tag_needed] then %>
+
+  <!-- Name Tag Needed -->
+
+  <div class="show_attr_group attr_group_committee_role_name_tag_needed ">      <!-- div10 -->
+    <div class="show_attr_label"> Name Tag Needed </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@committee_role.name_tag_needed.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:seq_no] = capture { %>
+<% if @show_item[:seq_no] then %>
+
+  <!-- Seq No -->
+
+  <div class="show_attr_group attr_group_committee_role_seq_no ">      <!-- div10 -->
+    <div class="show_attr_label"> Seq No </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@committee_role.seq_no.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+<% @ft_view_section_order = []
+   @ft_view_section_order << :ft_prop_title
+   @ft_view_section_order << :role_name
+   @ft_view_section_order << :description
+   @ft_view_section_order << :calling_required
+   @ft_view_section_order << :name_tag_needed
+   @ft_view_section_order << :seq_no
+%>
+
+<!-- BEGIN-UID.user_ordering -->
+
+<!-- END-UID.user_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+

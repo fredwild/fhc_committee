@@ -1,0 +1,181 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   @ft_view_section = {}
+%>
+
+<!-- BEGIN-UID.user_ctrls -->
+
+<!-- END-UID.user_ctrls -->
+
+<% @ft_view_section[:ft_prop_title] = capture { %>
+<% if @show_item[:ft_prop_title] then %>
+<div class="show_iname">
+   <%= @task_obj.iname %>
+</div>
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:name] = capture { %>
+<% if @show_item[:name] then %>
+
+  <!-- Name -->
+
+  <div class="show_attr_group attr_group_task_obj_name ">      <!-- div10 -->
+    <div class="show_attr_label"> Name </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@task_obj.name.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:description] = capture { %>
+<% if @show_item[:description] then %>
+
+  <!-- Description -->
+
+  <div class="show_attr_group attr_group_task_obj_description ">      <!-- div10 -->
+    <div class="show_attr_label"> Description </div>                    <!-- div11 -->
+    <div class="show_attr_value multiline"><%= rc_format(@task_obj.description.to_s,"description") %></div>   <!-- div12g -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:month_week] = capture { %>
+<% if @show_item[:month_week] then %>
+
+  <!-- Month Week -->
+
+  <div class="show_attr_group attr_group_task_obj_month_week ">      <!-- div10 -->
+    <div class="show_attr_label"> Month Week </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@task_obj.month_week.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:key_task] = capture { %>
+<% if @show_item[:key_task] then %>
+
+  <!-- Key Task -->
+
+  <div class="show_attr_group attr_group_task_obj_key_task ">      <!-- div10 -->
+    <div class="show_attr_label"> Key Task </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@task_obj.key_task.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:seq_no] = capture { %>
+<% if @show_item[:seq_no] then %>
+
+  <!-- Seq No -->
+
+  <div class="show_attr_group attr_group_task_obj_seq_no ">      <!-- div10 -->
+    <div class="show_attr_label"> Seq No </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@task_obj.seq_no.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+<% @ft_view_section[:month] = capture { %>
+<% if @show_item[:month] then %>
+
+    <!-- Month -->
+
+    <div class="show_attr_group attr_group_task_obj_tasks">     <!-- div16b -->
+      <div class="show_attr_label"> Month </div>         <!-- div17b -->
+      <div class="show_attr_value"> <%= @task_obj.month.nil? ? "" : link_to(@task_obj.month.iname, url_show(@task_obj.month)) %>&nbsp;</div>
+    </div>         <!-- end div16b -->
+
+<% end %>
+<% } %>
+
+<% @ft_view_section[:meeting] = capture { %>
+<% if @show_item[:meeting] then %>
+
+    <!-- Meeting -->
+
+    <div class="show_attr_group attr_group_task_obj_tasks_addressed">     <!-- div16b -->
+      <div class="show_attr_label"> Meeting </div>         <!-- div17b -->
+      <div class="show_attr_value"> <%= @task_obj.meeting.nil? ? "" : link_to(@task_obj.meeting.iname, url_show(@task_obj.meeting)) %>&nbsp;</div>
+    </div>         <!-- end div16b -->
+
+<% end %>
+<% } %>
+
+<% @ft_view_section[:predecessor] = capture { %>
+<% if @show_item[:predecessor] then %>
+
+    <!-- Predecessor -->
+
+    <div class="show_attr_group attr_group_task_obj_follow_on_tasks">     <!-- div16b -->
+      <div class="show_attr_label"> Predecessor </div>         <!-- div17b -->
+      <div class="show_attr_value"> <%= @task_obj.predecessor.nil? ? "" : link_to(@task_obj.predecessor.iname, url_show(@task_obj.predecessor)) %>&nbsp;</div>
+    </div>         <!-- end div16b -->
+
+<% end %>
+<% } %>
+
+<% @ft_view_section[:commitee] = capture { %>
+<% if @show_item[:commitee] then %>
+
+    <!-- Commitee -->
+
+    <div class="show_attr_group attr_group_task_obj_tasks">     <!-- div16b -->
+      <div class="show_attr_label"> Commitee </div>         <!-- div17b -->
+      <div class="show_attr_value"> <%= @task_obj.commitee.nil? ? "" : link_to(@task_obj.commitee.iname, url_show(@task_obj.commitee)) %>&nbsp;</div>
+    </div>         <!-- end div16b -->
+
+<% end %>
+<% } %>
+
+<% @ft_view_section[:committee_role] = capture { %>
+<% if @show_item[:committee_role] then %>
+
+    <!-- Committee Role -->
+
+    <div class="show_attr_group attr_group_task_obj_tasks">     <!-- div16b -->
+      <div class="show_attr_label"> Committee Role </div>         <!-- div17b -->
+      <div class="show_attr_value"> <%= @task_obj.committee_role.nil? ? "" : link_to(@task_obj.committee_role.iname, url_show(@task_obj.committee_role)) %>&nbsp;</div>
+    </div>         <!-- end div16b -->
+
+<% end %>
+<% } %>
+
+<% @ft_view_section_order = []
+   @ft_view_section_order << :ft_prop_title
+   @ft_view_section_order << :name
+   @ft_view_section_order << :description
+   @ft_view_section_order << :month_week
+   @ft_view_section_order << :key_task
+   @ft_view_section_order << :seq_no
+   @ft_view_section_order << :month
+   @ft_view_section_order << :meeting
+   @ft_view_section_order << :predecessor
+   @ft_view_section_order << :commitee
+   @ft_view_section_order << :committee_role
+%>
+
+<!-- BEGIN-UID.user_ordering -->
+
+<!-- END-UID.user_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+

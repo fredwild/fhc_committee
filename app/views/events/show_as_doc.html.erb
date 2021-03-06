@@ -1,0 +1,230 @@
+<% unless @embedded %>
+
+<div class="buttons_etc buttons_etc_top">
+<table class="buttons_etc_top_table" border="0" cellspacing="0">
+<tr>
+  <td width="60%" valign="top">
+    <%= js_button_to 'Modify', :controller => 'events', :action => 'edit', :id => @event %> 
+    <select onchange="javascript: location = this[this.selectedIndex].value;">
+      <option value="#">Select an action...</option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'events', :action => 'show', :id => @event.id)%>"> Normal Format </option>
+      <option value="<%=url_for(:controller => 'events', :action => 'show_as_doc', :id => @event.id)%>"> Document Format </option>
+      <option value="#">----------------</option>
+    <option value="<%=url_for(:controller => 'events', :action => 'list')%>"> <%="Table of Event".pluralize%> </option>
+    <option value="<%=url_for(:controller => 'events', :action => 'block_list')%>"> <%="List of Event".pluralize%> </option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'events', :action => 'new')%>"> Add new Event </option>
+
+    <option value="#">----------------</option>
+
+<!-- BEGIN-UID.user_actions -->
+
+<!-- END-UID.user_actions -->
+
+    </select>
+  </td>
+  <td class="context" width="40%">
+   <%=context_links(@event)%>
+  </td>
+</tr>
+</table>
+</div>
+
+<% end %>
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   @ft_view_section = {}
+
+   dir_ind = params['direction'] || 'ASC'
+   asc_desc = Hash.new(dir_ind)
+   asc_desc[ params['order_by'].to_s ] = ( dir_ind['ASC'] ? 'DESC' : 'ASC')
+
+   darrow = Hash.new("")
+   darrow[params['order_by'].to_s] = (dir_ind == 'ASC' ? " &uarr;" : " &darr;")
+%>
+
+
+<div class="show_as_doc_view show_as_doc_view_event">    <!-- show_as_doc_view -->
+
+    <div class="show_doc_props show_doc_props_event">   <!-- show_doc_props -->
+
+      <p class="doc_prev_next_links">
+      <%=link_to "previous", url_show_as_doc(@event.prev_item), :title => "Previous Event", :style => "font-size:8pt;"%> 
+      | <%=link_to "next", url_show_as_doc(@event.next_item), :title => "Next Event", :style => "font-size:8pt;"%>
+      </p>
+
+<!-- BEGIN-UID.user_properties -->
+
+<!-- END-UID.user_properties -->
+
+
+
+<% @ft_view_section[:year] = capture { %>
+<% if @show_item[:year] then %>
+
+  <!-- Year -->
+
+  <div class="doc_attr_group attr_group_event_year title">     <!-- div10-b -->
+    <div class="doc_attr_label"> Year </div>                   <!-- div11-b -->
+    <div class="doc_attr_value single_line"><%= auto_link(@event.year.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+  <p class="spacer">&nbsp;</p>
+
+<% end %>
+<% } %>
+
+<% @ft_view_section_order = []
+   @ft_view_section_order << :year
+%>
+
+<!-- BEGIN-UID.user_ordering -->
+
+<!-- END-UID.user_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+
+    </div>   <!-- show_doc_props -->
+
+    <p class="spacer">&nbsp;</p>
+
+
+<% @ft_view_section = {} %>
+
+<% @ft_view_section[:objectives] = capture { %>
+<% if @show_item[:objectives] then %>
+
+  <!-- Objectives -->
+
+  <div class="doc_section_group">                             <!-- div10.doc -->
+    <div class="doc_section_label"> Objectives </div>    <!-- div11.doc -->
+    <div class="doc_section_value">  <!-- div12g.doc -->
+        <%= rc_format(@event.objectives.to_s,"objectives") %> 
+    </div>   <!-- div12g.doc end -->
+  </div>   <!-- div10.doc end -->
+
+<% end %>
+<% } %>
+
+<% @ft_view_section_order = []
+   @ft_view_section_order << :objectives
+%>
+
+<!-- BEGIN-UID.user_text_ordering -->
+
+<!-- END-UID.user_text_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+
+<div class="show_as_doc_related">
+
+<!-- BEGIN-UID.user_related_items -->
+<h3 class="rel_items_heading">Related Items</h3>
+<!-- END-UID.user_related_items -->
+
+<div class="show_hide_subtable_text">
+<% listtext_op = session['list_text_toggles'] ? "show text in tables" : "hide text in tables" %>
+<%= link_to listtext_op, {:controller => 'fast_ops', :action => 'toggle_list_text_toggle'}, :style => 'font-size:8pt;' %> |
+<% listimage_op = session['list_image_toggles'] ? "show images in tables" : "hide images in tables" %>
+<%= link_to listimage_op, {:controller => 'fast_ops', :action => 'toggle_list_image_toggle'}, :style => 'font-size:8pt;' %>
+</div>
+
+
+<% @ft_view_section = {} %>
+
+
+<% @ft_view_section[:assignments] = capture { %>
+<% if @show_item[:assignments] then %>
+
+  <!-- Assignments -->
+
+  <a name="assignments"></a>
+
+  <div id="show_rel_assignments" class="show_rel show_rel_assignments">                                                 <!-- div28 -->
+    <div id="show_rel_assignments_label" class="rel_label"> Assignments &nbsp; <%= show_hide('show/hide','show_rel_assignments_value')%> </div>        <!-- div29 -->
+
+    <div id="show_rel_assignments_value" class="rel_value">                                                                           <!-- div30 -->
+        <table class="detail" cellspacing="1">
+          <tr>
+            <th> <%= link_to("Volunteer"+darrow['volunteer'], { :controller => @event.ctrlr_name, :action => params[:action], :id => @event, :order_sublist => 'assignments', :order_by => 'volunteer', :direction => asc_desc['volunteer'] }, :class => 'col_sorting_link') %> </th>
+            <th> <%= link_to("Committee Role"+darrow['committee_role'], { :controller => @event.ctrlr_name, :action => params[:action], :id => @event, :order_sublist => 'assignments', :order_by => 'committee_role', :direction => asc_desc['committee_role'] }, :class => 'col_sorting_link') %> </th>
+          </tr>
+
+          <% prev_item = nil %>
+          <% for role_assignment in (@assignments || []) %>
+            <tr>
+        <td> <%= role_assignment.volunteer && link_to(role_assignment.volunteer.iname, url_show(role_assignment.volunteer)) %>&nbsp;</td>
+        <td> <%= role_assignment.committee_role && link_to(role_assignment.committee_role.iname, url_show(role_assignment.committee_role)) %>&nbsp;</td>
+            </tr>
+            <% prev_item = role_assignment %>
+          <% end %>
+        </table>
+
+    </div>          <!-- div31 -->
+  </div>            <!-- div32 -->
+<% end %>
+<% } %>
+
+
+<%     @ft_view_section_order = []
+       @ft_view_section_order << :assignments
+%>
+<!-- BEGIN-UID.user_rel_ordering -->
+
+<!-- END-UID.user_rel_ordering -->
+
+<% for s in @ft_view_section_order do %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+
+</div> <!-- show_as_doc_related -->
+
+
+</div>  <!-- show_as_doc_view -->
+
+<!-- BEGIN-UID.userdivs -->
+
+<!-- END-UID.userdivs -->
+
+<% unless @embedded %>
+
+<div class="buttons_etc buttons_etc_bottom">
+<table class="buttons_etc_bottom_table" border="0" cellspacing="0">
+<tr>
+  <td width="60%" valign="top">
+    <%= js_button_to 'Modify', :controller => 'events', :action => 'edit', :id => @event %> 
+    <select onchange="javascript: location = this[this.selectedIndex].value;">
+      <option value="#">Select an action...</option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'events', :action => 'show', :id => @event.id)%>"> Normal Format </option>
+      <option value="<%=url_for(:controller => 'events', :action => 'show_as_doc', :id => @event.id)%>"> Document Format </option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'events', :action => 'list')%>"> <%="Table of Event".pluralize%> </option>
+      <option value="<%=url_for(:controller => 'events', :action => 'block_list')%>"> <%="List of Event".pluralize%> </option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'events', :action => 'new')%>"> Add new Event </option>
+
+    <option value="#">----------------</option>
+
+
+
+    </select>
+  </td>
+  <td class="context" width="40%">
+   <%=context_links(@event)%>
+  </td>
+</tr>
+</table>
+</div>
+
+<% end %>

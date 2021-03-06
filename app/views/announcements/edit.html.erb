@@ -1,0 +1,125 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   view_params = { :form_name => 'announcements/form' }
+   @ft_view_section = {}
+
+   dir_ind = params['direction'] || 'ASC'
+   asc_desc = Hash.new(dir_ind)
+   asc_desc[ params['order_by'].to_s ] = ( dir_ind['ASC'] ? 'DESC' : 'ASC')
+
+   darrow = Hash.new("")
+   darrow[ params['order_by'].to_s ] = (dir_ind == 'ASC' ? " &uarr;" : " &darr;")
+%>
+<% unless @embedded %>
+
+<div class="buttons_etc buttons_etc_top">
+<table class="buttons_etc_top_table" border="0" cellspacing="0">
+<tr>
+  <td width="60%" valign="top">
+    <%= js_button_to 'Normal View', :controller => 'announcements', :action => 'show', :id => @announcement %> 
+    <select onchange="javascript: location = this[this.selectedIndex].value;">
+      <option value="#">Select an action...</option>
+      <option value="#">----------------</option>
+    <option value="<%=url_for(:controller => 'announcements', :action => 'list')%>"> <%="Table of Announcement".pluralize%> </option>
+    <option value="<%=url_for(:controller => 'announcements', :action => 'block_list')%>"> <%="List of Announcement".pluralize%> </option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'announcements', :action => 'new')%>"> Add new Announcement </option>
+
+    <option value="#">----------------</option>
+
+<!-- BEGIN-UID.user_actions -->
+
+<!-- END-UID.user_actions -->
+
+    </select>
+  </td>
+  <td class="context" width="40%">
+   <%=context_links(@announcement)%>
+  </td>
+</tr>
+</table>
+</div>
+
+<% end %>
+
+<!-- BEGIN-UID.user_mods -->
+
+<!-- END-UID.user_mods -->
+
+<fieldset>
+<LEGEND>Properties</LEGEND>
+
+<% form_tag(:controller => 'announcements', :action => 'update', :id => @announcement) do %>
+  <p class="submit_top">&nbsp;<%= submit_tag 'Save Changes' %> </p>
+  <%= render :partial => view_params[:form_name] %>
+  <p class="submit_bottom">&nbsp;<%= submit_tag 'Save Changes' %> </p>
+<% end %> <!-- end form_tag -->
+
+</fieldset>
+
+<p class="spacer">&nbsp;</p>
+
+<div class="edit_view edit_view_announcement">              <!-- div1 -->
+
+<!-- BEGIN-UID.user_related_items -->
+<h3 class="rel_items_heading">Related Items</h3>
+<!-- END-UID.user_related_items -->
+
+<div class="show_hide_subtable_text">
+<% listtext_op = session['list_text_toggles'] ? "show text" : "hide text" %>
+<%= link_to listtext_op, {:controller => 'fast_ops', :action => 'toggle_list_text_toggle'}, :style => 'font-size:8pt;' %> | 
+<% listimage_op = session['list_image_toggles'] ? "show images" : "hide images" %>
+<%= link_to listimage_op, {:controller => 'fast_ops', :action => 'toggle_list_image_toggle'}, :style => 'font-size:8pt;' %>
+</div>
+
+<% @ft_view_section = {} %>
+
+<% @ft_view_section_order = []
+%>
+
+<!-- BEGIN-UID.user_ordering -->
+
+<!-- END-UID.user_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+
+
+</div>                           <!-- end div1 -->
+
+<% unless @embedded %>
+
+<div class="buttons_etc buttons_etc_bottom">
+<table class="buttons_etc_bottom_table" border="0" cellspacing="0">
+<tr>
+  <td width="60%" valign="top">
+    <%= js_button_to 'Normal View', :controller => 'announcements', :action => 'show', :id => @announcement %> 
+    <select onchange="javascript: location = this[this.selectedIndex].value;">
+      <option value="#">Select an action...</option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'announcements', :action => 'list')%>"> <%="Table of Announcement".pluralize%> </option>
+      <option value="<%=url_for(:controller => 'announcements', :action => 'block_list')%>"> <%="List of Announcement".pluralize%> </option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'announcements', :action => 'new')%>"> Add new Announcement </option>
+
+    <option value="#">----------------</option>
+
+
+
+    </select>
+  </td>
+  <td class="context" width="40%">
+   <%=context_links(@announcement)%>
+  </td>
+</tr>
+</table>
+</div>
+
+<% end %>

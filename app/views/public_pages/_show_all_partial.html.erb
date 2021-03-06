@@ -1,0 +1,85 @@
+  <%
+    cols         = @klass.value_attrs()+@klass.foreign_key_attrs()
+    title        = @klass.name.pluralize.titleize
+    col_headings = cols.collect{|c| c.titleize()}
+    order_options = [['',nil],['order',''],['a..z','asc'],['z..a','desc']]
+
+    @sort_params       = {} unless @sort_params
+    @sort_order_params = {} unless @sort_order_params
+    @search_params     = {} unless @search_params
+
+    @show_sort   = (not @sort_params.values.max.to_s.empty?)
+    @show_search = (not @search_params.values.max.to_s.empty?)
+  %>
+
+  <%
+    nav_links = submit_tag("Refresh", :style => "font-size:8pt; font-family:arial;") + " &nbsp; " +
+                "<span style=\"color:blue; cursor:pointer;\" onclick=\"$('sort_row').toggle();\">Sort</span>" + " &nbsp; " +
+                "<span style=\"color:blue; cursor:pointer;\" onclick=\"$('search_row').toggle();\">Search</span>" + " &nbsp; &nbsp; " +
+                link_to_remote("First", { :url => url_for(params.merge({:page_no => 1})), :update => @list_div_id }) +
+                "&nbsp; | &nbsp;" +
+                link_to_remote("Prev", { :url => url_for(params.merge({:page_no => [@page_no-1,1].max})), :update => @list_div_id }) +
+                "&nbsp; | &nbsp;" +
+                link_to_remote("Next", { :url => url_for(params.merge({:page_no => [@page_no+1,@last_page].min})), :update => @list_div_id }) +
+                "&nbsp; | &nbsp;" +
+                link_to_remote("Last", { :url => url_for(params.merge({:page_no => @last_page})), :update => @list_div_id })
+  %>
+
+    <table class="list_header" cellspacing="0" cellpadding="0" border="0">
+
+      <tr>
+        <td valign="top">
+          <h3 style="margin:6px 0;"><%= title %></h3>
+        </td>
+        <td align="right" valign="top">
+          <table class="list_headline" cellspacing="0" cellpadding="0" border="0">
+            <tr>
+              <td><%= @header_info.collect{|inf| inf == "NAV_LINKS" ? nav_links : inf}.join("</td><td>")%></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    <table class="thinline" cellspacing="0" cellpadding="0" border="0">
+
+      <tr>
+        <th style="padding:2px; vertical-align:top; white-space:nowrap;">
+            <span style="font-size:8pt; font-weight:normal; color:navy; cursor:pointer;" onclick="selectToggle(true,'chks')">All</span> 
+            &nbsp;|&nbsp; <span style="font-size:8pt; font-weight:normal; color:navy; cursor:pointer;" onclick="selectToggle(false,'chks')">None</span>
+        </th>
+        
+        <th><%= col_headings.join("</th><th>")%></th>
+      </tr>
+
+      <tr id="search_row" style="display:<%= @show_search ? "table-row" : "none"%>;">
+        <td><%= cols.collect{|c| text_field_tag("search[#{c}]",@search_params[c])}.join("</td><td>")%></td>
+      </tr>
+
+      <tr id="sort_row" style="display:<%= @show_sort ? "table-row" : "none"%>;">
+        <td><%= cols.collect{|c|
+                   select_tag("sort[#{c}]",
+                     options_for_select(order_options, @sort_params[c].to_s == "" ? nil : @sort_params[c])
+                   ) +
+                   " &nbsp; " +
+                   select_tag("sort_order[#{c}]", 
+                     options_for_select([['',nil],['rank',0]]+(1..cols.size).to_a.collect{|n| [n,n]},
+                     @sort_order_params[c].to_s == "0" ? nil : @sort_order_params[c])
+                   )
+                   }.join("</td><td>")%></td>
+      </tr>
+
+      <% for row in @rows do %>
+        <%
+          row_data = cols.collect{|c| row.get_attr_val(c)}
+          row_data[0] = link_to(row_data[0], url_show_one(row))
+        %>
+        <tr>
+          <td class="links no_lf" style="padding-top:1px; text-align:center;">
+            <%=check_box_tag "delchk[#{row.id}]"%>
+          </td>
+          <td><%= row_data.join("</td><td>")%></td>
+        </tr>
+      <% end %>
+
+    </table>

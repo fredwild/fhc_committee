@@ -1,0 +1,3 @@
+<%='"'%><%=@cols.collect{|c| c.titleize}.join('","')%><%='"'%>
+<% for r in @rows do %><%='"'%><%=@cols.collect{|c| r[c].to_s.gsub("\"","\"\"")}.join('","')%><%='"'%>
+<% end %>

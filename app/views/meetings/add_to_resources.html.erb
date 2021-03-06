@@ -1,0 +1,28 @@
+
+<!-- BEGIN-UID.user_ctrls -->
+
+<!-- END-UID.user_ctrls -->
+
+<div  id="add_new_to_resources" style="float:right; width:60%;">
+    <% dest = url_for :controller => 'meetings', :action => 'update_resources', :id => @meeting.id %>
+    <% form_tag( :controller => 'resources', :action => 'new', :redirect => dest ) do %>
+        <%= submit_tag 'Add New...' %>
+    <% end %> <!-- end form_tag -->
+</div>
+
+<div id="add_to_resources_list">
+    <% form_tag( :controller => 'meetings', :action => :update_resources, :id => @meeting ) do %>
+        <%= submit_tag 'Add Selected' %>
+        <p class="select_list">&nbsp;</p>
+        <% for resource in @resources %>
+            <p class="select_list"> <%= check_box_tag("resource_ids[]",resource.id) %> <%= resource.sname %> </p>
+        <% end %>
+        <p class="select_list">&nbsp;</p>
+        <%= submit_tag 'Add Selected' %>
+    <% end %> <!-- end form_tag -->
+</div>
+
+<!-- BEGIN-UID.user_divs -->
+
+<!-- END-UID.user_divs -->
+

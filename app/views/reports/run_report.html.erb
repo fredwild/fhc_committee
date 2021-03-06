@@ -1,0 +1,42 @@
+   <%
+     num_pat = /^[0-9.]$/
+   
+     format_val = Proc.new {|c,s|
+       if s =~ num_pat && c["_bal"] || c["_amt"] || c["amount"]
+         number_to_currency(s.to_f)
+       elsif c == "file_no"
+         link_to(s, :controller => 'collect_cases', :action => 'show_by_file_no', :file_no => s)
+       else
+         s
+       end
+     }
+   %>
+   
+   <div class="report_results">
+      <div class="report_options" style="float:right; margin-right:40px;">
+        <%= link_to "Save as CSV...", :controller => 'reports', :action => 'run_report', :id => @report, :format => 'csv' %>
+      </div>
+      
+      <h3><%=@report.name.to_s%></h3>
+      <p><%=@report.description.to_s%></p>
+      <p><%= @rows.size %> records</p>
+      
+      <table class="thinline" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <th><%=@cols.collect{|c| c.titleize}.join("</th><th>")%></th>
+        </tr>
+      
+        <% for r in @rows %>
+          <tr>
+            <%
+              items = []
+              for col in @cols do
+                items << "<td style=\"padding:1px 4px; text-align:#{@rjust[col] ? "right" : "left"}\">#{format_val.call(col,r[col])}</td>"
+              end
+            %>
+            <%= items.join("\n")%>
+          </tr>
+        <% end %>
+      </table>
+   </div>
+

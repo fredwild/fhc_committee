@@ -1,0 +1,21 @@
+
+<!-- BEGIN-UID.user_ctrls -->
+
+<!-- END-UID.user_ctrls -->
+
+<div id="add_to_facilitator_list">
+   <% form_tag( :controller => 'meetings', :action => :update_facilitator, :id => @meeting ) do %>
+       <%= submit_tag 'Set Selected' %>
+       <p class="select_list">&nbsp;</p>
+       <% for committee_role in @committee_roles %>
+           <p class="select_list"> <%= radio_button_tag("committee_role_id",committee_role.id) %> <%= committee_role.sname %> </p>
+       <% end %>
+       <p class="select_list">&nbsp;</p>
+       <%= submit_tag 'Set Selected' %>
+   <% end %> <!-- end form_tag -->
+</div>
+
+<!-- BEGIN-UID.user_divs -->
+
+<!-- END-UID.user_divs -->
+

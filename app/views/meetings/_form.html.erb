@@ -1,0 +1,147 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   @ft_view_section = {}
+
+   @edit_ctrl_cols = @edit_ctrl_cols || 60
+
+   @text_ctrl_rows = @text_ctrl_rows || 8
+   @text_ctrl_cols = @text_ctrl_cols || (@edit_ctrl_cols - 1)
+%>
+
+<!-- BEGIN-UID.user_vis_ctrls -->
+
+<!-- END-UID.user_vis_ctrls -->
+
+<%= error_messages_for 'meeting' %>
+
+<!--[form:meeting]-->
+<table class="aform_table">
+
+<% @ft_view_section[:name] = capture { %>
+<% if @show_item[:name] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="meeting_name">Name&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'meeting', 'name', :size => [60,@edit_ctrl_cols].min, :maxlength => "60", :id => "focus" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:purpose] = capture { %>
+<% if @show_item[:purpose] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="meeting_purpose">Purpose&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'meeting', 'purpose', :size => [100,@edit_ctrl_cols].min, :maxlength => "100" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:agenda] = capture { %>
+<% if @show_item[:agenda] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="meeting_agenda">Agenda</label></td>
+<td class="value">&nbsp;<%= text_area 'meeting', 'agenda', :rows => @text_ctrl_rows, :cols => @text_ctrl_cols %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:month_week] = capture { %>
+<% if @show_item[:month_week] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="meeting_month_week">Month Week&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'meeting', 'month_week', :size => "14" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:notes] = capture { %>
+<% if @show_item[:notes] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="meeting_notes">Notes</label></td>
+<td class="value">&nbsp;<%= text_area 'meeting', 'notes', :rows => @text_ctrl_rows, :cols => @text_ctrl_cols %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:seq_no] = capture { %>
+<% if @show_item[:seq_no] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="meeting_seq_no">Seq No&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'meeting', 'seq_no', :size => "14" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:month] = capture { %>
+<% if @show_item[:month] then %>
+
+    <!-- Month -->
+
+<tr class="aform_row">
+
+<td class="label">&nbsp;<label for="meeting_meetings">Month</label></td>
+
+<td class="value">&nbsp;<%= 
+  @month_choices = (@month_choices || Month.choices_for(@meeting,'month'))
+  current = (@meeting.month && @meeting.month.id)
+  options = options_for_select([["--select--",""]] + @month_choices.collect{|x| [ x.sname, x.id ]}, current)
+  select("meeting", "month_month_id", options)
+%></td>
+
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:facilitator] = capture { %>
+<% if @show_item[:facilitator] then %>
+
+    <!-- Facilitator -->
+
+<tr class="aform_row">
+
+<td class="label">&nbsp;<label for="meeting_meetings1">Facilitator</label></td>
+
+<td class="value">&nbsp;<%= 
+  @facilitator_choices = (@facilitator_choices || CommitteeRole.choices_for(@meeting,'facilitator'))
+  current = (@meeting.facilitator && @meeting.facilitator.id)
+  options = options_for_select([["--select--",""]] + @facilitator_choices.collect{|x| [ x.sname, x.id ]}, current)
+  select("meeting", "facilitator_committee_role_id", options)
+%></td>
+
+</tr>
+<% end %>
+<% } %>
+
+<%     @ft_view_section_order = []
+       @ft_view_section_order << :name
+       @ft_view_section_order << :purpose
+       @ft_view_section_order << :agenda
+       @ft_view_section_order << :month_week
+       @ft_view_section_order << :notes
+       @ft_view_section_order << :seq_no
+       @ft_view_section_order << :month
+       @ft_view_section_order << :facilitator
+%>
+
+<!-- BEGIN-UID.user_section_ordering -->
+
+<!-- END-UID.user_section_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+
+
+<!-- BEGIN-UID.user_fields -->
+
+<!-- END-UID.user_fields -->
+
+</table>
+
+
+<!--[eoform:meeting]-->

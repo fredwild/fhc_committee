@@ -1,0 +1,37 @@
+
+User:
+    full_text_search:
+        all: true
+    fast_ops:
+        all: true
+    public_pages:
+        all: true
+    months:
+        all: true
+    documents:
+        all: true
+    events:
+        all: true
+    announcements:
+        all: true
+    volunteers:
+        all: true
+    meetings:
+        all: true
+    task_objs:
+        all: true
+    committees:
+        all: true
+    website_functions:
+        all: true
+    committee_roles:
+        all: true
+    role_assignments:
+        all: true
+    resources:
+        all: true
+
+#BEGIN-UID.auth_ext
+
+#END-UID.auth_ext
+

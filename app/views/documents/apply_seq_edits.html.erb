@@ -1,0 +1,16 @@
+<div class="seq_edits">
+   <p>While editing, sequence numbers are assigned to provide gaps
+   you can use to order items relative to each another.  When saved, the sequence will be
+   re-numbered from 1..N, keeping the items in the final order you specify.</p>
+
+   <% form_tag(:action => 'apply_seq_edits') do %>
+       <%= submit_tag "Apply/Refresh" %> &nbsp; &nbsp; <%= js_button_to "Save Sequence", :action => "list" %>
+       <p>&nbsp</p>
+       <% for item in @documents do %>
+           <p class="seq_edit_item"> <%= text_field_tag("seq_nos[#{item.id}]",(item.seq_no || item.id).to_i * 5, {:style => "width:5em;"}) %> <%= item.sname %> </p>
+       <% end %>
+       <p>&nbsp</p>
+       <%= submit_tag "Apply/Refresh" %> &nbsp; &nbsp; <%= js_button_to "Save Sequence", :action => "list" %>
+   <% end %>
+</div>
+

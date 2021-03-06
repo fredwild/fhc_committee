@@ -1,0 +1,58 @@
+
+<h3>Manage Images</h3>
+
+<blockquote>
+
+<% form_tag( { :action => 'upload_image' }, { :enctype => 'multipart/form-data' } ) do %>
+  <b>Local file path</b> <br /> 
+  <input type="file" name="form_file" size="70"/>
+
+<% if @compact then %>
+  <input id="fname" type="hidden" name="filename" value="<%=@upload_name||''%>" size="30"/>
+<% else %>
+  <br/> <br/>
+  <b>Image file name on server</b> <br/> 
+  <input id="fname" type="text" name="filename" value="<%=@upload_name||''%>" size="30"/>
+<% end %>
+<% if params[:class_name] %>
+  <%=hidden_field_tag 'class_name', params[:class_name] %>
+  <%=hidden_field_tag 'instance_id', params[:instance_id] %>
+  <%=hidden_field_tag 'attr_name', params[:attr_name] %>
+<% end %>
+  <br/> <br/>
+  <input type="submit" name="save" value="Upload"/>
+
+<% end %> <!-- end form_tag -->
+
+<% if ! @compact then %>
+
+<p class="spacer">&nbsp;</p>
+<p>Images can be included in-line within text fields using the notation <code>!image_name.jpg!</code> 
+(jpg,gif,png,...), including the bang characters.  After including such a reference, you 
+will be prompted within the text to upload the file by following a red
+link that appears for the given file, whenever the named file is not yet on the server.</p>
+
+<hr />
+
+<% if @files.size > 0 then %>
+  <iframe name="image_frame" style="float:right; border:solid 2px gray;" width="400" height="300">No iframe Support</iframe>
+<% end %>
+
+<h3>Existing images</h3>
+
+  <ul style="list-style:none;">
+    <% @files.each { |ifile| %>
+       <li> 
+         <%=link_to("<b>X</b>",{:action => 'delete_image', :delete => ifile.to_s}, { :title => "Delete", :style => "color:maroon;" })%>
+         <%=ifile.to_s%>&nbsp;
+         <%= link_to("View", image_path(image_tagpath(ifile.to_s)), { :target => "image_frame" } ) %>
+       </li>
+    <% } %>
+  </ul>
+
+<p class="spacer"><!-- --></p>
+
+<% end %>
+
+</blockquote>
+

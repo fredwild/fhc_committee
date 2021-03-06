@@ -1,0 +1,21 @@
+
+<!-- BEGIN-UID.user_ctrls -->
+
+<!-- END-UID.user_ctrls -->
+
+<div id="add_to_oversight_list">
+   <% form_tag( :controller => 'committees', :action => :update_oversight, :id => @committee ) do %>
+       <%= submit_tag 'Set Selected' %>
+       <p class="select_list">&nbsp;</p>
+       <% for role_assignment in @role_assignments %>
+           <p class="select_list"> <%= radio_button_tag("role_assignment_id",role_assignment.id) %> <%= role_assignment.sname %> </p>
+       <% end %>
+       <p class="select_list">&nbsp;</p>
+       <%= submit_tag 'Set Selected' %>
+   <% end %> <!-- end form_tag -->
+</div>
+
+<!-- BEGIN-UID.user_divs -->
+
+<!-- END-UID.user_divs -->
+

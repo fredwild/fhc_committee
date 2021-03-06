@@ -1,0 +1,369 @@
+
+<% 
+  @add_list_view_edits = true if @add_list_view_edits.nil? || (session['user'].nil? || session['user'].is_admin?)
+  @add_row_deleting ||= @add_list_view_edits 
+  @add_col_editing ||= @add_list_view_edits 
+  @add_new_obj ||= @add_list_view_edits 
+  @add_quick_add ||= @add_list_view_edits 
+
+  @submit_action_name = "Apply to Checked"
+  @batch_actions ||= [ ]
+%>
+
+<%
+unless @field_info
+    @field_info = []
+    @field_info << ["Name", "name", true]
+    @field_info << ["Description", "description", true]
+    @field_info << ["Link", "link", true]
+    @field_info << ["Seq No", "seq_no", true]
+    @field_info << ["Task", "task", true]
+end
+%>
+
+<!-- BEGIN-UID.list_view_settings -->
+
+<!-- END-UID.list_view_settings -->
+
+<% 
+  @batch_actions += ["Delete"] if @add_row_deleting
+  field_choices = @field_info.select{|fin| fin[2]}.collect{|fin| fin[0,2]}
+  editable_fields = field_choices.select{|f| ! WebsiteFunction.foreign_key_attrs().include?(f[1])}
+  field_list = @field_info.collect{|fin| fin[1]}.join('|')
+%>
+
+<!-- start toplinks -->
+
+<table class="website_function_toplinks toplinks" style="margin-bottom:15px;" border="0" width="100%">
+<tr>
+<td class="toplinks_lhs">
+
+<div class="website_function_actions">
+ <%= js_button_to "Block View", params.merge(:controller => 'website_functions', :action => 'block_list'), :class => "block_view_button" %>
+<select onchange="javascript: location = this[this.selectedIndex].value;">
+    <option value="#">Select an action...</option>
+<% if @add_new_obj %>
+    <option value="#a">----------------</option>
+    <option value="<%=url_for(:controller => 'website_functions', :action => 'new')%>"> Add new Website Function </option>
+<% end %>
+        <option value="#b">----------------</option>
+        <option value="<%=url_for(:controller => 'website_functions', :action => 'show_queries')%>"> View Reports </option>
+        <option value="#c">----------------</option>
+        <option value="<%=url_for(params.merge(:controller => 'website_functions', :action => 'download_csv', :query => (params[:query] ? params[:query] : 'list_all'), :field_list => field_list))%>"> Download CSV </option>
+<% if @add_list_view_edits %>
+        <option value="<%=url_for(:controller => 'website_functions', :action => 'csv_upload')%>"> Upload CSV </option>
+        <option value="#d">----------------</option>
+        <option value="<%=url_for(:controller => 'website_functions', :action => 'apply_seq_edits')%>"> Edit Item Sequence </option>
+<% end %>
+
+<!-- BEGIN-UID.user_actions -->
+
+<!-- END-UID.user_actions -->
+
+    </select>
+</div>
+
+<% if @page_no %>
+<div class="website_function_pagination">
+    <% @n_pages = ((@count-1+@page_size)/@page_size).to_i %>
+    <div class="pagination" style="float:left;margin-bottom:12px;margin-top:12px;">
+        <span class="rs_page_nos">Page: <%=@count == @page_size ? "All" : @page_no.to_s %> of <%=@n_pages%> (<%=number_with_delimiter(@count)%> Items)
+        <span class="rs_navs">
+        <% if @page_no > 1 then%>
+          <%= link_to( "Previous", params.merge({:controller => 'website_functions', :action => 'list', :query => @query[:name], :order_by => params[:order_by], :page => @page_no.to_i-1})) %> 
+        <% else %>
+          Previous
+        <% end %>
+        |
+        <% if @page_size*@page_no < @count %>
+          <%= link_to( "Next", params.merge({:controller => 'website_functions', :action => 'list', :query => @query[:name], :order_by => params[:order_by], :page => @page_no.to_i+1})) %>
+        <% else %>
+          Next
+        <% end %>
+        &nbsp; &nbsp; &nbsp; 
+
+        <% @page_size = @def_page_size if @page_size == @count %>
+
+        <%= link_to( "First",  params.merge({:controller => 'website_functions', :action => 'list', :query => @query[:name], :order_by => params[:order_by], :page => 1, :page_length => @page_size})) %>
+        |
+        <%= link_to( "Last",   params.merge({:controller => 'website_functions', :action => 'list', :query => @query[:name], :order_by => params[:order_by], :page => @n_pages, :page_length => @page_size})) %>
+      <% if @count.to_i < 1200 then %>
+        &nbsp; &nbsp; &nbsp;
+        <%= link_to( "Show All",    params.merge({:controller => 'website_functions', :action => 'list', :query => @query[:name], :order_by => params[:order_by], :page => 1, :page_length => @count})) %>
+      <% end %>
+        </span></span>
+    </div>          
+    <div class="go_to_page" style="float:left; padding-top:6px; margin-left:30px;">
+        <%
+          params_hash = params.merge({:controller => 'website_functions', :action => 'list', :query => @query[:name], :order_by => params[:order_by], :page_length => @page_size})
+          params_hash.delete :page
+        %>
+        <% form_tag(params_hash) do %>
+          Page: <%= text_field_tag "page", "", :style => "width:30px;" %>
+          <%= submit_tag "&raquo;" %>
+        <% end %>
+    </div>
+</div>
+<% end %>
+
+</td>
+
+<td class="toplinks_rhs">
+</td>
+</tr>
+</table>
+
+<!-- end toplinks -->
+
+<!-- BEGIN-UID.user_code -->
+
+<!-- END-UID.user_code -->
+
+
+<p class="edits_and_filters" style="margin-top:-10px;">
+ <%=show_hide("sort", "list_sort")%> 
+ | <%=show_hide("search", "list_search1")%> 
+ <% if @add_col_editing %>
+ | <%=show_hide("edit columns", "col_value_replace1")%> 
+ <% end %>
+ <% if @add_row_deleting %>
+ | <%=show_hide("delete rows", "delete_rows1")%> 
+ <% end %>
+ <% if @add_quick_add%>
+ | <%=show_hide("quick-add", "quick_add_items1")%>
+ <% end %>
+<% listtext_op = session['list_text_toggles'] ? "show text" : "hide text" %>
+| <%= link_to listtext_op, {:controller => 'fast_ops', :action => 'toggle_list_text_toggle'}, :style => 'font-size:8pt;' %>
+</p>
+
+<% display_val = params[:sort_field] ? "block" : "none"%>
+<div id="list_sort" class="list_sort" style="display:<%=display_val%>;">
+<% form_tag(params.merge(:controller => 'website_functions', :action => 'list_with_sort').delete_if{|k,v| k.include?("sort_field") || k.include?("direction")}) do %>
+Sort by 
+<%=select_tag "sort_field", options_for_select([["",""]] + field_choices, params[:sort_field]) %>
+<%=select_tag "direction",  options_for_select([["A..Z","ASC"],["Z..A","DESC"]], params[:direction]) %>
+then 
+<%=select_tag "sort_field2", options_for_select([["",""]] + field_choices, params[:sort_field2]) %>
+<%=select_tag "direction2",  options_for_select([["A..Z","ASC"],["Z..A","DESC"]], params[:direction2]) %>
+then
+<%=select_tag "sort_field3", options_for_select([["",""]] + field_choices, params[:sort_field3]) %>
+<%=select_tag "direction3",  options_for_select([["A..Z","ASC"],["Z..A","DESC"]], params[:direction3]) %>
+<%=submit_tag("Sort")%> &nbsp; <%= params[:sort_field] ? (js_button_to "Cancel", params.merge({:controller => 'website_functions', :action => 'list_without_sort'}), :style => 'color:maroon;') : "" %>
+<% end %>
+</div>
+
+<% display_val = params[:search_str] && ! params[:hide_q] ? "block" : "none"%>
+<div id="list_search1" class="list_search" style="display:<%=display_val%>;">
+<% form_tag(params.merge(:controller => 'website_functions', :action => 'list_with_filter').delete_if{|k,v| k.include?("search_str") || k.include?("search_field")}) do %>
+<table cellpadding="0">
+<tr>
+
+<td valign="top">
+Only show rows where
+</td>
+
+<td valign="top">
+<p>
+<%=select_tag "search_field", options_for_select([["",""]] + field_choices, params[:search_field]) %>
+is
+<%=text_field_tag("search_str", params[:search_str].to_s, :title => 'Use % or * as wildcard' )%>
+</p>
+
+<p>
+<%=select_tag "search_field2", options_for_select([["",""]] + field_choices, params[:search_field2]) %>
+is
+<%=text_field_tag("search_str2", params[:search_str2].to_s, :title => 'Use % or * as wildcard' )%>
+</p>
+
+<p>
+<%=select_tag "search_field3", options_for_select([["",""]] + field_choices, params[:search_field3]) %>
+is
+<%=text_field_tag("search_str3", params[:search_str3].to_s, :title => 'Use % or * as wildcard' )%>
+</p>
+
+</td>
+
+<td valign="top">
+   <%=submit_tag("Search")%> <%= params[:search_str] ? (js_button_to "Cancel", params.merge({:controller => 'website_functions', :action => 'list_without_filter'}), :style => 'color:maroon;') : "" %>
+</td>
+</tr>
+</table>
+<% end %>
+
+</div>
+
+<% if @add_list_view_edits %>
+
+
+<div id="col_value_replace1" class="col_value_replace" style="display:none;">
+<% form_tag(:controller => 'website_functions', :action => 'replace_column_value') do %>
+  Replace
+  <%=text_field_tag("old_value", '', :style => "margin:0px;font-size:8pt;")%>
+  with
+  <%=text_field_tag("new_value", '', :style => "margin:0px;font-size:8pt;")%>
+  in <%=select_tag "field", options_for_select([["",""]] + editable_fields,""), 
+                   :style=>"margin:0px;font-size:8pt;"%>
+  <%=submit_with_confirm_tag("Execute", :confirm => "Replace all! Are you sure?")%> 
+<% end %>
+</div>
+
+
+<div id="delete_rows1" class="delete_rows" style="display:none;">
+<% form_tag(:controller => 'website_functions', :action => 'delete_matching_rows') do %>
+  Delete rows having
+  <%=text_field_tag("value", '', :style=>"margin:0px;font-size:8pt;" )%>
+  in <%=select_tag "field", options_for_select([["",""]] + editable_fields,""), 
+                   :style=>"margin:0px;font-size:8pt;"%>
+  <%=submit_with_confirm_tag("Execute", :confirm => "Delete rows! Are you sure?")%> 
+  <% end %>
+</div>
+
+<% end %>
+
+<% if @add_list_view_edits %>
+
+<div id="quick_add_items1" class="quick_add_items" style="display:none; margin-bottom:6px;">
+<% form_tag(:controller => 'website_functions', :action => 'quick_add_items') do %>
+  Add WebsiteFunctions by name (one per line) <br />
+  <%=text_area_tag("names", '', {:style=>"margin:0px;font-size:8pt; height:0.5in; width:3in;"} )%>
+  <%=submit_tag("Add WebsiteFunctions")%> 
+<% end %>
+</div>
+
+<% end %>
+
+
+<% form_tag({:controller => 'website_functions', :action => 'apply_to_checked_items'}, :name => 'chks') do %>
+
+<div style="margin:6px 0;">
+  <%= select_tag 'action_to_perform', options_for_select([["Select an action...",""]]+@batch_actions.collect{|a| [a,a]},"") %>
+  <%=submit_with_confirm_tag @submit_action_name, :confirm => 'Apply to all checked items. Are you sure?'%>
+</div>
+
+<table class="master" cellspacing="1">
+
+    <!-- table header --> 
+  
+    <tr>
+
+    <th style="padding:2px; vertical-align:top; white-space:nowrap;">
+        <span style="font-size:8pt; font-weight:normal; color:navy; cursor:pointer;" onclick="selectToggle(true,'chks')">All</span> 
+        &nbsp;|&nbsp; <span style="font-size:8pt; font-weight:normal; color:navy; cursor:pointer;" onclick="selectToggle(false,'chks')">None</span>
+    </th>
+    
+    <% for fdesc in @field_info %>
+        <% attr_info = WebsiteFunction.attr_type_info(fdesc[1]) %>
+        <th>
+    	    <% unless (attr_info && attr_info[:modifier] == 'derived') || ( ! fdesc[2] ) %>	
+    	        <% if @order_field == fdesc[1] %>
+    	            <%= link_to "#{fdesc[0]} #{(@direction == 'ASC' ? "&uarr;" : "&darr;")}", params.merge({:controller => 'website_functions', :action => 'list_by_page', :order_by => fdesc[1], :direction => (@direction == 'ASC' ? 'DESC' : 'ASC'), :page => '1', :page_length => @page_size}), :class => 'col_sorting_link' %>
+    	        <% else %>
+    	            <%= link_to "#{fdesc[0]}", params.merge({:controller => 'website_functions', :action => 'list_by_page', :order_by => fdesc[1], :page => '1', :page_length => @page_size}), :class => 'col_sorting_link' %>
+    	        <% end %>
+    	    <% else %>
+    		    <%= fdesc[0] %>
+    		<% end %>
+        </th>
+    
+    <% end %>
+
+    <th>&nbsp;</th>
+
+
+    </tr>
+
+    <!-- table body --> 
+
+    <% prev_item = nil %>
+    <% for website_function in @website_functions %>
+
+      <tr class="<%=cycle("odd","even")%>">
+
+		   <td class="links no_lf" style="padding-top:1px;">
+	       <%=check_box_tag "delchk[#{website_function.id}]"%>&nbsp;&nbsp;<%= link_to image_tag("pencil.gif",{:border=>"0", :title => 'Edit'}), {:controller => website_function.ctrlr_name, :action => 'edit', :id => website_function} %>
+		   </td>
+		
+		   <td class="no_lf">
+			   <%= link_to website_function.get_attr_val(@field_info[0][1]), url_show(website_function) %>
+		   </td>
+
+      <% toggle_text  = session['list_text_toggles'] %>
+      <% toggle_image = session['list_image_toggles'] %>
+
+      <% for fdesc in @field_info[1..-1] do 
+        attr_desc = WebsiteFunction.attr_type_info(fdesc[1])
+        attr_val  = website_function.get_attr_val(fdesc[1])
+
+        td_class_spec = 'class="no_lf"'
+        col_alignment = 'left'
+
+        if attr_desc then
+          td_class_spec = ''        if ["text"].include?(attr_desc[:datatype].to_s)
+          col_alignment = 'right'   if ["double","int","long"].include?(attr_desc[:datatype].to_s)
+
+          if attr_desc[:datatype] == 'date' then
+              attr_val = (attr_val && attr_val.to_date_image).to_s
+          elsif attr_desc[:datatype] == 'time' then
+              attr_val = (attr_val && attr_val.to_time_image).to_s
+          elsif attr_desc[:datatype] == 'datetime' then
+              attr_val = (attr_val && attr_val.to_datetime_image).to_s
+          elsif attr_desc[:datatype] == 'text' then
+              div_id = "#{fdesc[1]}_#{website_function.id}"
+              attr_val = "#{show_hide('show/hide',div_id)}<div id='#{div_id}' style='display:#{toggle_text  ? 'none' : 'block'};'>#{rc_format(attr_val.to_s,fdesc[1])}</div>"
+          elsif attr_desc[:modifier] == 'image_name' then
+              div_id = "#{fdesc[1]}_#{website_function.id}"
+              attr_val = "#{show_hide('show/hide',div_id)}<div id='#{div_id}' style='display:#{toggle_image ? 'none' : 'block'};'>#{image_tag_or_crlink(attr_val,fdesc[0])}</div>"
+          elsif attr_desc[:modifier] == "money" then
+              attr_val = attr_val ? number_to_currency(attr_val.to_f) : ""
+          elsif attr_desc[:modifier] == "linktext" then
+              attr_val = link_to("view", attr_val, :target => 'show_link') if attr_val && (attr_val[0,4] == "http" || attr_val[0,3] == "ftp")
+          end
+        end
+      %>
+
+      <td <%=td_class_spec%> style="text-align:<%=col_alignment%>"> 
+        <%= attr_val%>
+      </td>
+    <% end %>
+
+      <% if prev_item then %>
+        <td style="text-align:center"><%= link_to "&uarr;", :action => 'swap_seq_nos', :obj1_id => prev_item.id, :obj2_id => website_function.id %></td>
+      <% else %>
+        <td>&nbsp;</td>
+      <% end %>
+
+    </tr>
+
+    <% prev_item = website_function %>
+    <% end %>
+
+</table>
+
+<% if @add_list_view_edits %>
+<% end # form %>
+
+<% end %>
+
+<p class="website_functions_bottom_links bottom_links" style="margin-top:16px;">
+ <%= js_button_to "Block View", params.merge(:controller => 'website_functions', :action => 'block_list'), :class => "block_view_button"  %>
+<select onchange="javascript: location = this[this.selectedIndex].value;">
+    <option value="#">Select an action...</option>
+<% if @add_list_view_edits %>
+    <option value="#a">----------------</option>
+    <option value="<%=url_for(:controller => 'website_functions', :action => 'new')%>"> Add new Website Function </option>
+<% end %>
+        <option value="#b">----------------</option>
+        <option value="<%=url_for(:controller => 'website_functions', :action => 'show_queries')%>"> View Reports </option>
+        <option value="#c">----------------</option>
+        <option value="<%=url_for(params.merge(:controller => 'website_functions', :action => 'download_csv'))%>"> Download CSV </option>
+    <% unless session['user'] && !session['user'].is_admin? %>
+        <option value="#d">----------------</option>
+        <option value="<%=url_for(:controller => 'website_functions', :action => 'apply_seq_edits')%>"> Edit Item Sequence </option>
+<% if @add_list_view_edits %>
+        <option value="<%=url_for(:controller => 'website_functions', :action => 'csv_upload')%>"> Upload CSV </option>
+<% end %>
+    <% end %>
+
+    </select>
+</p>
+

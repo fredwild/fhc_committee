@@ -1,0 +1,96 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   @ft_view_section = {}
+%>
+
+<!-- BEGIN-UID.user_ctrls -->
+
+<!-- END-UID.user_ctrls -->
+
+<% @ft_view_section[:ft_prop_title] = capture { %>
+<% if @show_item[:ft_prop_title] then %>
+<div class="show_iname">
+   <%= @document.iname %>
+</div>
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:name] = capture { %>
+<% if @show_item[:name] then %>
+
+  <!-- Name -->
+
+  <div class="show_attr_group attr_group_document_name ">      <!-- div10 -->
+    <div class="show_attr_label"> Name </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@document.name.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:description] = capture { %>
+<% if @show_item[:description] then %>
+
+  <!-- Description -->
+
+  <div class="show_attr_group attr_group_document_description ">      <!-- div10 -->
+    <div class="show_attr_label"> Description </div>                    <!-- div11 -->
+    <div class="show_attr_value multiline"><%= rc_format(@document.description.to_s,"description") %></div>   <!-- div12g -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:doc_file] = capture { %>
+<% if @show_item[:doc_file] then %>
+
+  <!-- Doc File -->
+
+  <div class="show_attr_group attr_group_document_doc_file ">      <!-- div10 -->
+    <div class="show_attr_label"> Doc File </div>                    <!-- div11 -->
+    <div class="show_attr_value multiline"><%= rc_format(@document.doc_file.to_s,"doc_file") %></div>   <!-- div12g -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:seq_no] = capture { %>
+<% if @show_item[:seq_no] then %>
+
+  <!-- Seq No -->
+
+  <div class="show_attr_group attr_group_document_seq_no ">      <!-- div10 -->
+    <div class="show_attr_label"> Seq No </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@document.seq_no.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+<% @ft_view_section_order = []
+   @ft_view_section_order << :ft_prop_title
+   @ft_view_section_order << :name
+   @ft_view_section_order << :description
+   @ft_view_section_order << :doc_file
+   @ft_view_section_order << :seq_no
+%>
+
+<!-- BEGIN-UID.user_ordering -->
+
+<!-- END-UID.user_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+

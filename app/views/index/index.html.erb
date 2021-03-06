@@ -1,0 +1,289 @@
+    <p class="search_form">
+      <% form_tag( :controller => 'full_text_search', :action => 'search' ) do %>
+        <%= submit_tag "Search" %> <%= text_field_tag 'search_text', "", :size => 20 %>
+
+      &nbsp;&nbsp;<select onchange="javascript: location = this[this.selectedIndex].value;">
+      <option value="#">Select an action...</option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'documents', :action => 'new')%>"> Add new Document </option>
+      <option value="<%=url_for(:controller => 'events', :action => 'new')%>"> Add new Event </option>
+      <option value="<%=url_for(:controller => 'announcements', :action => 'new')%>"> Add new Announcement </option>
+      <option value="<%=url_for(:controller => 'volunteers', :action => 'new')%>"> Add new Volunteer </option>
+      <option value="<%=url_for(:controller => 'meetings', :action => 'new')%>"> Add new Meeting </option>
+      <option value="<%=url_for(:controller => 'task_objs', :action => 'new')%>"> Add new Task </option>
+      <option value="<%=url_for(:controller => 'committees', :action => 'new')%>"> Add new Committee </option>
+      <option value="<%=url_for(:controller => 'website_functions', :action => 'new')%>"> Add new Website Function </option>
+      <option value="<%=url_for(:controller => 'role_assignments', :action => 'new')%>"> Add new Role Assignment </option>
+      <option value="<%=url_for(:controller => 'resources', :action => 'new')%>"> Add new Resource </option>
+
+
+<!-- BEGIN-UID.user_actions -->
+
+<!-- END-UID.user_actions -->
+
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'fast_ops', :action => 'images')%>"> Manage Images </option>
+      <option value="<%=url_for(:controller => 'fast_ops', :action => 'docs')%>"> Manage Attachments </option>
+    </select>
+
+    <% end %> <!-- end form_tag -->
+  </p>
+
+<% main_sections = [] %>
+
+    <% main_sections << "section_document" %>
+    <% content_for("section_document") { %>
+
+          <!-- Document -->
+
+          <div style="margin-left:10px;">
+              <%= instance_count_for( {
+                       :obj_class => "Document",
+                       :title => "Document".pluralize,
+                       :title_link => url_for(:controller => 'documents', :action => 'list') } ) %>
+          </div>
+
+
+    <% } %>
+
+    <% main_sections << "section_event" %>
+    <% content_for("section_event") { %>
+
+          <!-- Event -->
+
+          <div style="margin-left:10px;">
+              <%= instance_count_for( {
+                       :obj_class => "Event",
+                       :title => "Event".pluralize,
+                       :title_link => url_for(:controller => 'events', :action => 'list') } ) %>
+          </div>
+
+
+    <% } %>
+
+    <% main_sections << "section_announcement" %>
+    <% content_for("section_announcement") { %>
+
+          <!-- Announcement -->
+
+          <div style="margin-left:10px;">
+              <%= instance_count_for( {
+                       :obj_class => "Announcement",
+                       :title => "Announcement".pluralize,
+                       :title_link => url_for(:controller => 'announcements', :action => 'list') } ) %>
+          </div>
+
+
+    <% } %>
+
+    <% main_sections << "section_volunteer" %>
+    <% content_for("section_volunteer") { %>
+
+          <!-- Volunteer -->
+
+          <div style="margin-left:10px;">
+              <%= instance_count_for( {
+                       :obj_class => "Volunteer",
+                       :title => "Volunteer".pluralize,
+                       :title_link => url_for(:controller => 'volunteers', :action => 'list') } ) %>
+          </div>
+
+
+    <% } %>
+
+    <% main_sections << "section_meeting" %>
+    <% content_for("section_meeting") { %>
+
+          <!-- Meeting -->
+
+          <div style="margin-left:10px;">
+              <%= instance_count_for( {
+                       :obj_class => "Meeting",
+                       :title => "Meeting".pluralize,
+                       :title_link => url_for(:controller => 'meetings', :action => 'list') } ) %>
+          </div>
+
+
+    <% } %>
+
+    <% main_sections << "section_task_obj" %>
+    <% content_for("section_task_obj") { %>
+
+          <!-- Task -->
+
+          <div style="margin-left:10px;">
+              <%= instance_count_for( {
+                       :obj_class => "TaskObj",
+                       :title => "Task".pluralize,
+                       :title_link => url_for(:controller => 'task_objs', :action => 'list') } ) %>
+          </div>
+
+
+    <% } %>
+
+    <% main_sections << "section_committee" %>
+    <% content_for("section_committee") { %>
+
+          <!-- Committee -->
+
+          <div style="margin-left:10px;">
+              <%= instance_count_for( {
+                       :obj_class => "Committee",
+                       :title => "Committee".pluralize,
+                       :title_link => url_for(:controller => 'committees', :action => 'list') } ) %>
+          </div>
+
+
+    <% } %>
+
+    <% main_sections << "section_website_function" %>
+    <% content_for("section_website_function") { %>
+
+          <!-- Website Function -->
+
+          <div style="margin-left:10px;">
+              <%= instance_count_for( {
+                       :obj_class => "WebsiteFunction",
+                       :title => "Website Function".pluralize,
+                       :title_link => url_for(:controller => 'website_functions', :action => 'list') } ) %>
+          </div>
+
+
+    <% } %>
+
+    <% main_sections << "section_committee_role" %>
+    <% content_for("section_committee_role") { %>
+
+          <!-- Committee Role -->
+
+          <div style="margin-left:10px;">
+              <%= instance_count_for( {
+                       :obj_class => "CommitteeRole",
+                       :title => "Committee Role".pluralize,
+                       :title_link => url_for(:controller => 'committee_roles', :action => 'list') } ) %>
+          </div>
+
+
+    <% } %>
+
+    <% main_sections << "section_role_assignment" %>
+    <% content_for("section_role_assignment") { %>
+
+          <!-- Role Assignment -->
+
+          <div style="margin-left:10px;">
+              <%= instance_count_for( {
+                       :obj_class => "RoleAssignment",
+                       :title => "Role Assignment".pluralize,
+                       :title_link => url_for(:controller => 'role_assignments', :action => 'list') } ) %>
+          </div>
+
+
+    <% } %>
+
+    <% main_sections << "section_resource" %>
+    <% content_for("section_resource") { %>
+
+          <!-- Resource -->
+
+          <div style="margin-left:10px;">
+              <%= instance_count_for( {
+                       :obj_class => "Resource",
+                       :title => "Resource".pluralize,
+                       :title_link => url_for(:controller => 'resources', :action => 'list') } ) %>
+          </div>
+
+
+    <% } %>
+
+<% assn_sections = [] %>
+
+<% codetable_sections = [] %>
+
+    <% codetable_sections << "section_month" %>
+    <% content_for("section_month") { %>
+
+          <!-- Month -->
+
+          <div style="margin-left:10px;">
+              <%= instance_count_for( {
+                       :obj_class => "Month",
+                       :title => "Month".pluralize,
+                       :title_link => url_for(:controller => 'months', :action => 'list') } ) %>
+          </div>
+
+
+    <% } %>
+
+<% config_data_sections = [] %>
+
+<% hidden_sections = [] %>
+
+
+<!-- BEGIN-UID.user_grouping -->
+
+  <div style="position:absolute; top:160px; left:320px; xborder:solid 1px gray;">
+    <%= image_tag "committee_help_site_map.jpg" %>
+  </div>
+
+<!-- END-UID.user_grouping -->
+
+<%
+   if ! @content_for_top_level_objs
+     content_for("top_level_objs") {
+%>
+        <div>
+         <div class="index_section"><span class="open_close" onClick="Element.toggle('main_contents')"> <b>Main</b></span>
+          <div id="main_contents" style='display:block'>
+
+<% for section in main_sections.sort do %>
+               <%= yield section %>
+<% end %>
+
+            <br />
+          </div>
+         </div>
+        </div>
+<%
+     }
+   end
+%>
+
+<%
+   if ! @content_for_section_section_refdata
+     content_for("section_refdata") {
+%>
+      <div>
+       <div class="index_section"><span class="open_close" onClick="Element.toggle('reference_data')"> <b>Reference Data</b></span>
+        <div id="reference_data" style='display:block'>
+<% for section in codetable_sections.sort do %>
+           <%= yield section %>
+<% end %>
+        <br />
+        </div>
+       </div>
+      </div>
+
+
+<%
+     }
+   end
+%>
+
+    <h3 class="index_contents_heading">Contents</h3>
+
+    <%= yield :top_level_objs %>
+
+    <%= yield :section_associations %>
+
+    <%= yield :section_refdata %>
+
+    <%= yield :section_config_data %>
+
+    <%= yield :section_hidden %>
+
+<!-- BEGIN-UID.userdivs -->
+
+
+<!-- END-UID.userdivs -->
+

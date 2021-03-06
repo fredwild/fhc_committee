@@ -1,0 +1,125 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   @ft_view_section = {}
+%>
+
+<!-- BEGIN-UID.user_ctrls -->
+
+<!-- END-UID.user_ctrls -->
+
+<% @ft_view_section[:ft_prop_title] = capture { %>
+<% if @show_item[:ft_prop_title] then %>
+<div class="show_iname">
+   <%= @committee.iname %>
+</div>
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:code] = capture { %>
+<% if @show_item[:code] then %>
+
+  <!-- Code -->
+
+  <div class="show_attr_group attr_group_committee_code ">      <!-- div10 -->
+    <div class="show_attr_label"> Code </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@committee.code.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:name] = capture { %>
+<% if @show_item[:name] then %>
+
+  <!-- Name -->
+
+  <div class="show_attr_group attr_group_committee_name ">      <!-- div10 -->
+    <div class="show_attr_label"> Name </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@committee.name.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:description] = capture { %>
+<% if @show_item[:description] then %>
+
+  <!-- Description -->
+
+  <div class="show_attr_group attr_group_committee_description ">      <!-- div10 -->
+    <div class="show_attr_label"> Description </div>                    <!-- div11 -->
+    <div class="show_attr_value multiline"><%= rc_format(@committee.description.to_s,"description") %></div>   <!-- div12g -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:picture] = capture { %>
+<% if @show_item[:picture] then %>
+
+  <!-- Picture -->
+
+  <div class="show_attr_group attr_group_committee_picture ">      <!-- div10 -->
+    <div class="show_attr_label"> Picture </div>                    <!-- div11 -->
+    <div class="show_attr_value picture"> <%= image_tag_or_crlink(@committee.picture,'Picture') %>&nbsp;</div>       <!-- div12e -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:seq_no] = capture { %>
+<% if @show_item[:seq_no] then %>
+
+  <!-- Seq No -->
+
+  <div class="show_attr_group attr_group_committee_seq_no ">      <!-- div10 -->
+    <div class="show_attr_label"> Seq No </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@committee.seq_no.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+<% @ft_view_section[:oversight] = capture { %>
+<% if @show_item[:oversight] then %>
+
+    <!-- Oversight -->
+
+    <div class="show_attr_group attr_group_committee_assigned_committees">     <!-- div16b -->
+      <div class="show_attr_label"> Oversight </div>         <!-- div17b -->
+      <div class="show_attr_value"> <%= @committee.oversight.nil? ? "" : link_to(@committee.oversight.iname, url_show(@committee.oversight)) %>&nbsp;</div>
+    </div>         <!-- end div16b -->
+
+<% end %>
+<% } %>
+
+<% @ft_view_section_order = []
+   @ft_view_section_order << :ft_prop_title
+   @ft_view_section_order << :code
+   @ft_view_section_order << :name
+   @ft_view_section_order << :description
+   @ft_view_section_order << :picture
+   @ft_view_section_order << :seq_no
+   @ft_view_section_order << :oversight
+%>
+
+<!-- BEGIN-UID.user_ordering -->
+
+<!-- END-UID.user_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+

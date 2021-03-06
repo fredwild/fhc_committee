@@ -1,0 +1,77 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   @ft_view_section = {}
+
+   dir_ind = params['direction'] || 'ASC'
+   asc_desc = Hash.new(dir_ind)
+   asc_desc[ params['order_by'].to_s ] = ( dir_ind['ASC'] ? 'DESC' : 'ASC')
+
+   darrow = Hash.new("")
+   darrow[params['order_by'].to_s] = (dir_ind == 'ASC' ? " &uarr;" : " &darr;")
+
+%>
+
+<div class="show_hide_subtable_text">
+<% listtext_op = session['list_text_toggles'] ? "show text" : "hide text" %> 
+<%= link_to listtext_op, {:controller => 'fast_ops', :action => 'toggle_list_text_toggle'}, :style => 'font-size:8pt;' %> |
+<% listimage_op = session['list_image_toggles'] ? "show images" : "hide images" %>
+<%= link_to listimage_op, {:controller => 'fast_ops', :action => 'toggle_list_image_toggle'}, :style => 'font-size:8pt;' %>
+</div>
+
+
+<!-- BEGIN-UID.user_ctrls -->
+
+<!-- END-UID.user_ctrls -->
+
+
+<% @ft_view_section[:assignments] = capture { %>
+<% if @show_item[:assignments] then %>
+
+  <!-- Assignments -->
+
+  <a name="assignments"></a>
+
+  <div id="show_rel_assignments" class="show_rel show_rel_assignments">                                                 <!-- div28 -->
+    <div id="show_rel_assignments_label" class="rel_label"> Assignments &nbsp; <%= show_hide('show/hide','show_rel_assignments_value')%> </div>        <!-- div29 -->
+
+    <div id="show_rel_assignments_value" class="rel_value">                                                                           <!-- div30 -->
+        <table class="detail" cellspacing="1">
+          <tr>
+            <th> <%= link_to("Event"+darrow['event'], { :controller => @volunteer.ctrlr_name, :action => params[:action], :id => @volunteer, :order_sublist => 'assignments', :order_by => 'event', :direction => asc_desc['event'] }, :class => 'col_sorting_link') %> </th>
+            <th> <%= link_to("Committee Role"+darrow['committee_role'], { :controller => @volunteer.ctrlr_name, :action => params[:action], :id => @volunteer, :order_sublist => 'assignments', :order_by => 'committee_role', :direction => asc_desc['committee_role'] }, :class => 'col_sorting_link') %> </th>
+          </tr>
+
+          <% prev_item = nil %>
+          <% for role_assignment in (@assignments || []) %>
+            <tr>
+        <td> <%= role_assignment.event && link_to(role_assignment.event.iname, url_show(role_assignment.event)) %>&nbsp;</td>
+        <td> <%= role_assignment.committee_role && link_to(role_assignment.committee_role.iname, url_show(role_assignment.committee_role)) %>&nbsp;</td>
+            </tr>
+            <% prev_item = role_assignment %>
+          <% end %>
+        </table>
+
+    </div>          <!-- div31 -->
+  </div>            <!-- div32 -->
+<% end %>
+<% } %>
+
+
+<% @ft_view_section_order = []
+   @ft_view_section_order << :assignments
+%>
+
+<!-- BEGIN-UID.user_ordering -->
+
+<!-- END-UID.user_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+

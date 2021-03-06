@@ -1,0 +1,21 @@
+
+<!-- BEGIN-UID.user_ctrls -->
+
+<!-- END-UID.user_ctrls -->
+
+<div id="add_to_task_list">
+   <% form_tag( :controller => 'website_functions', :action => :update_task, :id => @website_function ) do %>
+       <%= submit_tag 'Set Selected' %>
+       <p class="select_list">&nbsp;</p>
+       <% for task_obj in @task_objs %>
+           <p class="select_list"> <%= radio_button_tag("task_obj_id",task_obj.id) %> <%= task_obj.sname %> </p>
+       <% end %>
+       <p class="select_list">&nbsp;</p>
+       <%= submit_tag 'Set Selected' %>
+   <% end %> <!-- end form_tag -->
+</div>
+
+<!-- BEGIN-UID.user_divs -->
+
+<!-- END-UID.user_divs -->
+

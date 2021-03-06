@@ -1,0 +1,75 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   @ft_view_section = {}
+
+   @edit_ctrl_cols = @edit_ctrl_cols || 60
+
+   @text_ctrl_rows = @text_ctrl_rows || 8
+   @text_ctrl_cols = @text_ctrl_cols || (@edit_ctrl_cols - 1)
+%>
+
+<!-- BEGIN-UID.user_vis_ctrls -->
+
+<!-- END-UID.user_vis_ctrls -->
+
+<%= error_messages_for 'month' %>
+
+<!--[form:month]-->
+<table class="aform_table">
+
+<% @ft_view_section[:seq_no] = capture { %>
+<% if @show_item[:seq_no] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="month_seq_no">Seq No&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'month', 'seq_no', :size => "14", :id => "focus" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:code] = capture { %>
+<% if @show_item[:code] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="month_code">Code&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'month', 'code', :size => [5,@edit_ctrl_cols].min, :maxlength => "5" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:description] = capture { %>
+<% if @show_item[:description] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="month_description">Description&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'month', 'description', :size => [60,@edit_ctrl_cols].min, :maxlength => "60" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<%     @ft_view_section_order = []
+       @ft_view_section_order << :seq_no
+       @ft_view_section_order << :code
+       @ft_view_section_order << :description
+%>
+
+<!-- BEGIN-UID.user_section_ordering -->
+
+<!-- END-UID.user_section_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+
+
+<!-- BEGIN-UID.user_fields -->
+
+<!-- END-UID.user_fields -->
+
+</table>
+
+
+<!--[eoform:month]-->

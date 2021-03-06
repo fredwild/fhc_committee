@@ -1,0 +1,154 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   @ft_view_section = {}
+%>
+
+<!-- BEGIN-UID.user_ctrls -->
+
+<!-- END-UID.user_ctrls -->
+
+<% @ft_view_section[:ft_prop_title] = capture { %>
+<% if @show_item[:ft_prop_title] then %>
+<div class="show_iname">
+   <%= @meeting.iname %>
+</div>
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:name] = capture { %>
+<% if @show_item[:name] then %>
+
+  <!-- Name -->
+
+  <div class="show_attr_group attr_group_meeting_name ">      <!-- div10 -->
+    <div class="show_attr_label"> Name </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@meeting.name.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:purpose] = capture { %>
+<% if @show_item[:purpose] then %>
+
+  <!-- Purpose -->
+
+  <div class="show_attr_group attr_group_meeting_purpose ">      <!-- div10 -->
+    <div class="show_attr_label"> Purpose </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@meeting.purpose.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:agenda] = capture { %>
+<% if @show_item[:agenda] then %>
+
+  <!-- Agenda -->
+
+  <div class="show_attr_group attr_group_meeting_agenda ">      <!-- div10 -->
+    <div class="show_attr_label"> Agenda </div>                    <!-- div11 -->
+    <div class="show_attr_value multiline"><%= rc_format(@meeting.agenda.to_s,"agenda") %></div>   <!-- div12g -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:month_week] = capture { %>
+<% if @show_item[:month_week] then %>
+
+  <!-- Month Week -->
+
+  <div class="show_attr_group attr_group_meeting_month_week ">      <!-- div10 -->
+    <div class="show_attr_label"> Month Week </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@meeting.month_week.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:notes] = capture { %>
+<% if @show_item[:notes] then %>
+
+  <!-- Notes -->
+
+  <div class="show_attr_group attr_group_meeting_notes ">      <!-- div10 -->
+    <div class="show_attr_label"> Notes </div>                    <!-- div11 -->
+    <div class="show_attr_value multiline"><%= rc_format(@meeting.notes.to_s,"notes") %></div>   <!-- div12g -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:seq_no] = capture { %>
+<% if @show_item[:seq_no] then %>
+
+  <!-- Seq No -->
+
+  <div class="show_attr_group attr_group_meeting_seq_no ">      <!-- div10 -->
+    <div class="show_attr_label"> Seq No </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@meeting.seq_no.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+<% @ft_view_section[:month] = capture { %>
+<% if @show_item[:month] then %>
+
+    <!-- Month -->
+
+    <div class="show_attr_group attr_group_meeting_meetings">     <!-- div16b -->
+      <div class="show_attr_label"> Month </div>         <!-- div17b -->
+      <div class="show_attr_value"> <%= @meeting.month.nil? ? "" : link_to(@meeting.month.iname, url_show(@meeting.month)) %>&nbsp;</div>
+    </div>         <!-- end div16b -->
+
+<% end %>
+<% } %>
+
+<% @ft_view_section[:facilitator] = capture { %>
+<% if @show_item[:facilitator] then %>
+
+    <!-- Facilitator -->
+
+    <div class="show_attr_group attr_group_meeting_meetings1">     <!-- div16b -->
+      <div class="show_attr_label"> Facilitator </div>         <!-- div17b -->
+      <div class="show_attr_value"> <%= @meeting.facilitator.nil? ? "" : link_to(@meeting.facilitator.iname, url_show(@meeting.facilitator)) %>&nbsp;</div>
+    </div>         <!-- end div16b -->
+
+<% end %>
+<% } %>
+
+<% @ft_view_section_order = []
+   @ft_view_section_order << :ft_prop_title
+   @ft_view_section_order << :name
+   @ft_view_section_order << :purpose
+   @ft_view_section_order << :agenda
+   @ft_view_section_order << :month_week
+   @ft_view_section_order << :notes
+   @ft_view_section_order << :seq_no
+   @ft_view_section_order << :month
+   @ft_view_section_order << :facilitator
+%>
+
+<!-- BEGIN-UID.user_ordering -->
+
+<!-- END-UID.user_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+

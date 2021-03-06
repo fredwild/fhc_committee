@@ -1,0 +1,33 @@
+
+
+#BEGIN-UID.userconfigs
+
+#END-UID.userconfigs
+
+
+development:
+    adapter: mysql2
+    database: fhc_committee_development
+    username: root
+    password: 
+    host: localhost
+    port: 3306
+    encoding: utf8
+
+test:
+    adapter: mysql2
+    database: fhc_committee_test
+    username: root
+    password: 
+    host: localhost
+    port: 3306
+    encoding: utf8
+
+production:
+    adapter: mysql2
+    database: fhc_committee_development
+    username: root
+    password: 
+    host: localhost
+    port: 3306
+    encoding: utf8

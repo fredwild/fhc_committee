@@ -1,0 +1,504 @@
+<% unless @embedded %>
+
+<div class="buttons_etc buttons_etc_top">
+<table class="buttons_etc_top_table" border="0" cellspacing="0">
+<tr>
+  <td width="60%" valign="top">
+    <%= js_button_to 'Modify', :controller => 'meetings', :action => 'edit', :id => @meeting %> 
+    <select onchange="javascript: location = this[this.selectedIndex].value;">
+      <option value="#">Select an action...</option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'meetings', :action => 'show', :id => @meeting.id)%>"> Normal Format </option>
+      <option value="<%=url_for(:controller => 'meetings', :action => 'show_as_doc', :id => @meeting.id)%>"> Document Format </option>
+      <option value="#">----------------</option>
+    <option value="<%=url_for(:controller => 'meetings', :action => 'list')%>"> <%="Table of Meeting".pluralize%> </option>
+    <option value="<%=url_for(:controller => 'meetings', :action => 'block_list')%>"> <%="List of Meeting".pluralize%> </option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'meetings', :action => 'new')%>"> Add new Meeting </option>
+
+    <option value="#">----------------</option>
+
+<!-- BEGIN-UID.user_actions -->
+
+<!-- END-UID.user_actions -->
+
+    </select>
+  </td>
+  <td class="context" width="40%">
+   <%=context_links(@meeting)%>
+  </td>
+</tr>
+</table>
+</div>
+
+<% end %>
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   @ft_view_section = {}
+
+   dir_ind = params['direction'] || 'ASC'
+   asc_desc = Hash.new(dir_ind)
+   asc_desc[ params['order_by'].to_s ] = ( dir_ind['ASC'] ? 'DESC' : 'ASC')
+
+   darrow = Hash.new("")
+   darrow[params['order_by'].to_s] = (dir_ind == 'ASC' ? " &uarr;" : " &darr;")
+%>
+
+
+<div class="show_as_doc_view show_as_doc_view_meeting">    <!-- show_as_doc_view -->
+
+    <div class="show_doc_props show_doc_props_meeting">   <!-- show_doc_props -->
+
+      <p class="doc_prev_next_links">
+      <%=link_to "previous", url_show_as_doc(@meeting.prev_item), :title => "Previous Meeting", :style => "font-size:8pt;"%> 
+      | <%=link_to "next", url_show_as_doc(@meeting.next_item), :title => "Next Meeting", :style => "font-size:8pt;"%>
+      </p>
+
+<!-- BEGIN-UID.user_properties -->
+
+<!-- END-UID.user_properties -->
+
+
+
+<% @ft_view_section[:name] = capture { %>
+<% if @show_item[:name] then %>
+
+  <!-- Name -->
+
+  <div class="doc_attr_group attr_group_meeting_name title">     <!-- div10-b -->
+    <div class="doc_attr_label"> Name </div>                   <!-- div11-b -->
+    <div class="doc_attr_value single_line"><%= auto_link(@meeting.name.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+  <p class="spacer">&nbsp;</p>
+
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:purpose] = capture { %>
+<% if @show_item[:purpose] then %>
+
+  <!-- Purpose -->
+
+  <div class="doc_attr_group attr_group_meeting_purpose ">     <!-- div10-b -->
+    <div class="doc_attr_label"> Purpose </div>                   <!-- div11-b -->
+    <div class="doc_attr_value single_line"><%= auto_link(@meeting.purpose.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:month_week] = capture { %>
+<% if @show_item[:month_week] then %>
+
+  <!-- Month Week -->
+
+  <div class="doc_attr_group attr_group_meeting_month_week ">     <!-- div10-b -->
+    <div class="doc_attr_label"> Month Week </div>                   <!-- div11-b -->
+    <div class="doc_attr_value single_line"><%= auto_link(@meeting.month_week.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:seq_no] = capture { %>
+<% if @show_item[:seq_no] then %>
+
+  <!-- Seq No -->
+
+  <div class="doc_attr_group attr_group_meeting_seq_no ">     <!-- div10-b -->
+    <div class="doc_attr_label"> Seq No </div>                   <!-- div11-b -->
+    <div class="doc_attr_value single_line"><%= auto_link(@meeting.seq_no.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+
+<% end %>
+<% } %>
+
+<% @ft_view_section[:month] = capture { %>
+<% if @show_item[:month] then %>
+
+    <!-- Month -->
+
+    <div class="doc_attr_group attr_group_meeting_meetings">     <!-- div16b -->
+      <div class="doc_attr_label"> Month </div>         <!-- div17b -->
+      <div class="doc_attr_value"> <%= @meeting.month.nil? ? "" : link_to(@meeting.month.iname, url_show(@meeting.month)) %>&nbsp;</div> 
+    </div>         <!-- end div16b -->
+
+<% end %>
+<% } %>
+
+<% @ft_view_section[:facilitator] = capture { %>
+<% if @show_item[:facilitator] then %>
+
+    <!-- Facilitator -->
+
+    <div class="doc_attr_group attr_group_meeting_meetings1">     <!-- div16b -->
+      <div class="doc_attr_label"> Facilitator </div>         <!-- div17b -->
+      <div class="doc_attr_value"> <%= @meeting.facilitator.nil? ? "" : link_to(@meeting.facilitator.iname, url_show(@meeting.facilitator)) %>&nbsp;</div> 
+    </div>         <!-- end div16b -->
+
+<% end %>
+<% } %>
+
+<% @ft_view_section_order = []
+   @ft_view_section_order << :name
+   @ft_view_section_order << :purpose
+   @ft_view_section_order << :month_week
+   @ft_view_section_order << :seq_no
+   @ft_view_section_order << :month
+   @ft_view_section_order << :facilitator
+%>
+
+<!-- BEGIN-UID.user_ordering -->
+
+<!-- END-UID.user_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+
+    </div>   <!-- show_doc_props -->
+
+    <p class="spacer">&nbsp;</p>
+
+
+<% @ft_view_section = {} %>
+
+<% @ft_view_section[:agenda] = capture { %>
+<% if @show_item[:agenda] then %>
+
+  <!-- Agenda -->
+
+  <div class="doc_section_group">                             <!-- div10.doc -->
+    <div class="doc_section_label"> Agenda </div>    <!-- div11.doc -->
+    <div class="doc_section_value">  <!-- div12g.doc -->
+        <%= rc_format(@meeting.agenda.to_s,"agenda") %> 
+    </div>   <!-- div12g.doc end -->
+  </div>   <!-- div10.doc end -->
+
+<% end %>
+<% } %>
+
+<% @ft_view_section[:notes] = capture { %>
+<% if @show_item[:notes] then %>
+
+  <!-- Notes -->
+
+  <div class="doc_section_group">                             <!-- div10.doc -->
+    <div class="doc_section_label"> Notes </div>    <!-- div11.doc -->
+    <div class="doc_section_value">  <!-- div12g.doc -->
+        <%= rc_format(@meeting.notes.to_s,"notes") %> 
+    </div>   <!-- div12g.doc end -->
+  </div>   <!-- div10.doc end -->
+
+<% end %>
+<% } %>
+
+<% @ft_view_section_order = []
+   @ft_view_section_order << :agenda
+   @ft_view_section_order << :notes
+%>
+
+<!-- BEGIN-UID.user_text_ordering -->
+
+<!-- END-UID.user_text_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+
+<div class="show_as_doc_related">
+
+<!-- BEGIN-UID.user_related_items -->
+<h3 class="rel_items_heading">Related Items</h3>
+<!-- END-UID.user_related_items -->
+
+<div class="show_hide_subtable_text">
+<% listtext_op = session['list_text_toggles'] ? "show text in tables" : "hide text in tables" %>
+<%= link_to listtext_op, {:controller => 'fast_ops', :action => 'toggle_list_text_toggle'}, :style => 'font-size:8pt;' %> |
+<% listimage_op = session['list_image_toggles'] ? "show images in tables" : "hide images in tables" %>
+<%= link_to listimage_op, {:controller => 'fast_ops', :action => 'toggle_list_image_toggle'}, :style => 'font-size:8pt;' %>
+</div>
+
+
+<% @ft_view_section = {} %>
+
+
+<% @ft_view_section[:invitees] = capture { %>
+<% if @show_item[:invitees] then %>
+
+  <!-- Invitees -->
+
+  <a name="invitees"></a>
+
+  <div id="show_rel_invitees" class="show_rel show_rel_invitees">                                                 <!-- div28 -->
+    <div id="show_rel_invitees_label" class="rel_label"> Invitees &nbsp; <%= show_hide('show/hide','show_rel_invitees_value')%> </div>        <!-- div29 -->
+
+    <div id="show_rel_invitees_value" class="rel_value">                                                                           <!-- div30 -->
+        <table class="detail" cellspacing="1">
+          <tr>
+            <th> <%= link_to "Role Name"+darrow['role_name'], { :controller => @meeting.ctrlr_name, :action => params[:action], :id => @meeting, :order_sublist => 'invitees', :order_by => 'role_name', :direction => asc_desc['role_name'] }, :class => 'col_sorting_link' %> </th>
+            <th> <%= link_to "Calling Required"+darrow['calling_required'], { :controller => @meeting.ctrlr_name, :action => params[:action], :id => @meeting, :order_sublist => 'invitees', :order_by => 'calling_required', :direction => asc_desc['calling_required'] }, :class => 'col_sorting_link' %> </th>
+            <th> <%= link_to "Name Tag Needed"+darrow['name_tag_needed'], { :controller => @meeting.ctrlr_name, :action => params[:action], :id => @meeting, :order_sublist => 'invitees', :order_by => 'name_tag_needed', :direction => asc_desc['name_tag_needed'] }, :class => 'col_sorting_link' %> </th>
+            <th> <%= link_to "Seq No"+darrow['seq_no'], { :controller => @meeting.ctrlr_name, :action => params[:action], :id => @meeting, :order_sublist => 'invitees', :order_by => 'seq_no', :direction => asc_desc['seq_no'] }, :class => 'col_sorting_link' %> </th>
+            <th> <%= link_to("Committee"+darrow['committee'], { :controller => @meeting.ctrlr_name, :action => params[:action], :id => @meeting, :order_sublist => 'invitees', :order_by => 'committee', :direction => asc_desc['committee'] }, :class => 'col_sorting_link') %> </th>
+          <th>&nbsp;</th>
+          </tr>
+
+          <% prev_item = nil %>
+          <% for committee_role in (@invitees || []) %>
+            <tr>
+            <td class="no_lf">
+              <% text = committee_role.role_name.to_s %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <%= link_to text, url_show(committee_role), :class => "identity_link" %> 
+            </td>
+
+            <td class="no_lf">
+              <% text = committee_role.calling_required.to_s %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <%= text %> 
+            </td>
+
+            <td class="no_lf">
+              <% text = committee_role.name_tag_needed.to_s %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <%= text %> 
+            </td>
+
+            <td class="no_lf">
+              <% text = committee_role.seq_no.to_s %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <%= text %> 
+            </td>
+
+        <td> <%= committee_role.committee && link_to(committee_role.committee.iname, url_show(committee_role.committee)) %>&nbsp;</td>
+      <% if prev_item then %>
+        <td style="text-align:center"><%= link_to "&uarr;", :controller => 'committee_roles', :action => 'swap_seq_nos', :obj1_id => prev_item.id, :obj2_id => committee_role.id %></td>
+      <% else %>
+        <td>&nbsp;</td>
+      <% end %>
+            </tr>
+            <% prev_item = committee_role %>
+          <% end %>
+        </table>
+
+    </div>          <!-- div31 -->
+  </div>            <!-- div32 -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:resources] = capture { %>
+<% if @show_item[:resources] then %>
+
+  <!-- Resources -->
+
+  <a name="resources"></a>
+
+  <div id="show_rel_resources" class="show_rel show_rel_resources">                                                 <!-- div28 -->
+    <div id="show_rel_resources_label" class="rel_label"> Resources &nbsp; <%= show_hide('show/hide','show_rel_resources_value')%> </div>        <!-- div29 -->
+
+    <div id="show_rel_resources_value" class="rel_value">                                                                           <!-- div30 -->
+        <table class="detail" cellspacing="1">
+          <tr>
+            <th> <%= link_to "Name"+darrow['name'], { :controller => @meeting.ctrlr_name, :action => params[:action], :id => @meeting, :order_sublist => 'resources', :order_by => 'name', :direction => asc_desc['name'] }, :class => 'col_sorting_link' %> </th>
+            <th> <%= link_to "Picture"+darrow['picture'], { :controller => @meeting.ctrlr_name, :action => params[:action], :id => @meeting, :order_sublist => 'resources', :order_by => 'picture', :direction => asc_desc['picture'] }, :class => 'col_sorting_link' %> </th>
+            <th> <%= link_to "Link"+darrow['link'], { :controller => @meeting.ctrlr_name, :action => params[:action], :id => @meeting, :order_sublist => 'resources', :order_by => 'link', :direction => asc_desc['link'] }, :class => 'col_sorting_link' %> </th>
+            <th> <%= link_to "Seq No"+darrow['seq_no'], { :controller => @meeting.ctrlr_name, :action => params[:action], :id => @meeting, :order_sublist => 'resources', :order_by => 'seq_no', :direction => asc_desc['seq_no'] }, :class => 'col_sorting_link' %> </th>
+          <th>&nbsp;</th>
+          </tr>
+
+          <% prev_item = nil %>
+          <% for resource in (@resources || []) %>
+            <tr>
+            <td class="no_lf">
+              <% text = resource.name.to_s %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <%= link_to text, url_show(resource), :class => "identity_link" %> 
+            </td>
+
+            <td class="no_lf">
+              <% text = resource.picture.to_s %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <% if session['list_image_toggles'] && resource.picture && image_exist?(resource.picture) then %>
+                 <%= show_hide "show/hide","picture_attr_#{resource.id}"%>
+                 <div class="cell_text_popup" id="picture_attr_<%=resource.id%>" style="display:none;">
+                   <%= image_tag_or_crlink(resource.picture,'Picture') %>
+                 </div>
+              <% else %>
+                 <%= image_tag_or_crlink(resource.picture,'Picture') %>
+              <% end %>
+            </td>
+
+            <td>
+              <% text = resource.link.to_s %>
+              <% targ = text %>
+              <% text = "..." %>
+              <% if targ && targ.size >= 4 && (targ[0,4] == "http" || targ[0,3] == "ftp") then %>
+              <%    text = link_to "Open...", targ, :target => 'show_link' %>
+              <% end %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <%= text %> 
+            </td>
+
+            <td class="no_lf">
+              <% text = resource.seq_no.to_s %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <%= text %> 
+            </td>
+
+      <% if prev_item then %>
+        <td style="text-align:center"><%= link_to "&uarr;", :controller => 'resources', :action => 'swap_seq_nos', :obj1_id => prev_item.id, :obj2_id => resource.id %></td>
+      <% else %>
+        <td>&nbsp;</td>
+      <% end %>
+            </tr>
+            <% prev_item = resource %>
+          <% end %>
+        </table>
+
+    </div>          <!-- div31 -->
+  </div>            <!-- div32 -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:tasks_addressed] = capture { %>
+<% if @show_item[:tasks_addressed] then %>
+
+  <!-- Tasks Addressed -->
+
+  <a name="tasks_addressed"></a>
+
+  <div id="show_rel_tasks_addressed" class="show_rel show_rel_tasks_addressed">                                                 <!-- div28 -->
+    <div id="show_rel_tasks_addressed_label" class="rel_label"> Tasks Addressed &nbsp; <%= show_hide('show/hide','show_rel_tasks_addressed_value')%> </div>        <!-- div29 -->
+
+    <div id="show_rel_tasks_addressed_value" class="rel_value">                                                                           <!-- div30 -->
+        <table class="detail" cellspacing="1">
+          <tr>
+            <th> <%= link_to "Name"+darrow['name'], { :controller => @meeting.ctrlr_name, :action => params[:action], :id => @meeting, :order_sublist => 'tasks_addressed', :order_by => 'name', :direction => asc_desc['name'] }, :class => 'col_sorting_link' %> </th>
+            <th> <%= link_to "Month Week"+darrow['month_week'], { :controller => @meeting.ctrlr_name, :action => params[:action], :id => @meeting, :order_sublist => 'tasks_addressed', :order_by => 'month_week', :direction => asc_desc['month_week'] }, :class => 'col_sorting_link' %> </th>
+            <th> <%= link_to "Key Task"+darrow['key_task'], { :controller => @meeting.ctrlr_name, :action => params[:action], :id => @meeting, :order_sublist => 'tasks_addressed', :order_by => 'key_task', :direction => asc_desc['key_task'] }, :class => 'col_sorting_link' %> </th>
+            <th> <%= link_to "Seq No"+darrow['seq_no'], { :controller => @meeting.ctrlr_name, :action => params[:action], :id => @meeting, :order_sublist => 'tasks_addressed', :order_by => 'seq_no', :direction => asc_desc['seq_no'] }, :class => 'col_sorting_link' %> </th>
+            <th> <%= link_to("Month"+darrow['month'], { :controller => @meeting.ctrlr_name, :action => params[:action], :id => @meeting, :order_sublist => 'tasks_addressed', :order_by => 'month', :direction => asc_desc['month'] }, :class => 'col_sorting_link') %> </th>
+            <th> <%= link_to("Predecessor"+darrow['predecessor'], { :controller => @meeting.ctrlr_name, :action => params[:action], :id => @meeting, :order_sublist => 'tasks_addressed', :order_by => 'predecessor', :direction => asc_desc['predecessor'] }, :class => 'col_sorting_link') %> </th>
+            <th> <%= link_to("Commitee"+darrow['commitee'], { :controller => @meeting.ctrlr_name, :action => params[:action], :id => @meeting, :order_sublist => 'tasks_addressed', :order_by => 'commitee', :direction => asc_desc['commitee'] }, :class => 'col_sorting_link') %> </th>
+            <th> <%= link_to("Committee Role"+darrow['committee_role'], { :controller => @meeting.ctrlr_name, :action => params[:action], :id => @meeting, :order_sublist => 'tasks_addressed', :order_by => 'committee_role', :direction => asc_desc['committee_role'] }, :class => 'col_sorting_link') %> </th>
+          <th>&nbsp;</th>
+          </tr>
+
+          <% prev_item = nil %>
+          <% for task_obj in (@tasks_addressed || []) %>
+            <tr>
+            <td class="no_lf">
+              <% text = task_obj.name.to_s %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <%= link_to text, url_show(task_obj), :class => "identity_link" %> 
+            </td>
+
+            <td class="no_lf">
+              <% text = task_obj.month_week.to_s %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <%= text %> 
+            </td>
+
+            <td class="no_lf">
+              <% text = task_obj.key_task.to_s %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <%= text %> 
+            </td>
+
+            <td class="no_lf">
+              <% text = task_obj.seq_no.to_s %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <%= text %> 
+            </td>
+
+        <td> <%= task_obj.month && link_to(task_obj.month.iname, url_show(task_obj.month)) %>&nbsp;</td>
+        <td> <%= task_obj.predecessor && link_to(task_obj.predecessor.iname, url_show(task_obj.predecessor)) %>&nbsp;</td>
+        <td> <%= task_obj.commitee && link_to(task_obj.commitee.iname, url_show(task_obj.commitee)) %>&nbsp;</td>
+        <td> <%= task_obj.committee_role && link_to(task_obj.committee_role.iname, url_show(task_obj.committee_role)) %>&nbsp;</td>
+      <% if prev_item then %>
+        <td style="text-align:center"><%= link_to "&uarr;", :controller => 'task_objs', :action => 'swap_seq_nos', :obj1_id => prev_item.id, :obj2_id => task_obj.id %></td>
+      <% else %>
+        <td>&nbsp;</td>
+      <% end %>
+            </tr>
+            <% prev_item = task_obj %>
+          <% end %>
+        </table>
+
+    </div>          <!-- div31 -->
+  </div>            <!-- div32 -->
+<% end %>
+<% } %>
+
+
+<%     @ft_view_section_order = []
+       @ft_view_section_order << :invitees
+       @ft_view_section_order << :resources
+       @ft_view_section_order << :tasks_addressed
+%>
+<!-- BEGIN-UID.user_rel_ordering -->
+
+<!-- END-UID.user_rel_ordering -->
+
+<% for s in @ft_view_section_order do %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+
+</div> <!-- show_as_doc_related -->
+
+
+</div>  <!-- show_as_doc_view -->
+
+<!-- BEGIN-UID.userdivs -->
+
+<!-- END-UID.userdivs -->
+
+<% unless @embedded %>
+
+<div class="buttons_etc buttons_etc_bottom">
+<table class="buttons_etc_bottom_table" border="0" cellspacing="0">
+<tr>
+  <td width="60%" valign="top">
+    <%= js_button_to 'Modify', :controller => 'meetings', :action => 'edit', :id => @meeting %> 
+    <select onchange="javascript: location = this[this.selectedIndex].value;">
+      <option value="#">Select an action...</option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'meetings', :action => 'show', :id => @meeting.id)%>"> Normal Format </option>
+      <option value="<%=url_for(:controller => 'meetings', :action => 'show_as_doc', :id => @meeting.id)%>"> Document Format </option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'meetings', :action => 'list')%>"> <%="Table of Meeting".pluralize%> </option>
+      <option value="<%=url_for(:controller => 'meetings', :action => 'block_list')%>"> <%="List of Meeting".pluralize%> </option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'meetings', :action => 'new')%>"> Add new Meeting </option>
+
+    <option value="#">----------------</option>
+
+
+
+    </select>
+  </td>
+  <td class="context" width="40%">
+   <%=context_links(@meeting)%>
+  </td>
+</tr>
+</table>
+</div>
+
+<% end %>

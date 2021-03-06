@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache"> <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache"> 
+
+  <!-- You may modify this file - it is only generated if it does not already exist -->
+
+    <title><%= @settings ? @settings[:page_subtitle] : "Welcome!" %></title>
+
+    <!-- styles -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -->
+    
+    <%= stylesheet_link_tag 'public_pages', :media => 'all' %>
+    <%= stylesheet_link_tag 'styles_print', :media => 'print' %>
+
+    <% if @current_site %>
+       <%= stylesheet_link_tag "public_pages", :media => 'all' %>
+    <% end %>
+
+    <!--[if IE]>
+    <style type="text/css">
+      <%# IE specific styles %>
+    </style>
+    <![endif]-->
+
+    <%= yield :page_styles %>
+
+
+    <!-- javascript -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -->
+    
+    
+    <%= javascript_include_tag 'jquery.min' %>
+    <%= javascript_include_tag 'jquery-ui.min' %>
+
+    <%= yield :page_scripts %>
+    
+</head>
+
+<body>
+
+      <div id="container">
+
+        <div id="header">
+          <div id="logo">
+            <%= image_tag(@settings[:logo], :height => '52') %>
+          </div>
+          <div id="header_text">
+            <h1><%= @settings ? @settings[:name] : "&nbsp;" %></h1>
+            <p class="description"><%= @settings ? @settings[:page_subtitle] : "&nbsp;" %></p>
+          </div>
+          <p style="clear:both"><!-- --></p>
+        </div>
+
+        <div id="wrapper">
+            <div id="content">
+
+              <%= yield :layout %>
+
+            </div>
+        </div>
+
+        <div id="views">
+
+            <p id="topic_category">Quick Links</p>
+            
+            <li><%= link_to("Home", url_public_home()) %></li>
+            </ul>
+
+        </div>
+
+
+        <div id="navigation">
+
+            <p id="nav_category">Useful Links</p>
+            <ul class="topic">
+            <li><%= link_to("Text Markup Reference", "http://redcloth.org/hobix.com/textile/quick.html", :target => 'reference') %></li>
+            </ul>
+
+        </div>
+
+
+        <% if @add_a_footer then %>
+          <div id="footer">
+              <ul>
+                  <li><a href="#">Navigation 1</a></li>
+                  <li><a href="#">Navigation 2</a></li>
+                  <li><a href="#">Navigation 3</a></li>
+              </ul>
+
+              <p>Footer goes here. Copyright, disclaimers, etc.</p>
+          </div>
+        <% end %>
+
+    </div>
+
+    <% if ENV['RAILS_ENV'] == 'development' %>
+   
+      <div id="debug" style="margin: 20px 5px 5px 5px;">
+        <p onclick="$('#debug_info').toggle();" style="color:#89A;cursor:pointer;">Show Runtime Context</p>
+        <div id="debug_info" style="display:none;">
+            <%= debug params %>
+              <hr />
+            <%= debug session %>
+        </div>
+      </div>
+   
+      <% @css_text = File.open("#{RAILS_ROOT}/public/stylesheets/public_pages.css","r"){|f| @css_text = f.read} %>
+      <div id="debug" style="margin: 20px 5px 5px 5px;">
+        <p onclick="$('#css_edit').toggle(); $('#css_text').focus();" style="color:#89A;cursor:pointer;">Edit CSS</p>
+        <div id="css_edit" style="display:none;">
+          <% form_tag(:controller => 'fast_ops', :action => 'edit_style_sheet', :css_name => 'public_pages.css') do %>
+            <%=submit_tag("Apply Changes")%> <br />
+            <%=text_area_tag("css_text", @css_text, :style => "width:98%;height:2in;margin-bottom:0.5in;")%>
+          <% end %>
+        </div>
+      </div>
+
+  <% end %>
+
+</body>
+
+</html>

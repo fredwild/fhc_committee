@@ -1,0 +1,107 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   @ft_view_section = {}
+
+   @edit_ctrl_cols = @edit_ctrl_cols || 60
+
+   @text_ctrl_rows = @text_ctrl_rows || 8
+   @text_ctrl_cols = @text_ctrl_cols || (@edit_ctrl_cols - 1)
+%>
+
+<!-- BEGIN-UID.user_vis_ctrls -->
+
+<!-- END-UID.user_vis_ctrls -->
+
+<%= error_messages_for 'website_function' %>
+
+<!--[form:website_function]-->
+<table class="aform_table">
+
+<% @ft_view_section[:name] = capture { %>
+<% if @show_item[:name] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="website_function_name">Name&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'website_function', 'name', :size => [60,@edit_ctrl_cols].min, :maxlength => "60", :id => "focus" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:description] = capture { %>
+<% if @show_item[:description] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="website_function_description">Description</label></td>
+<td class="value">&nbsp;<%= text_area 'website_function', 'description', :rows => @text_ctrl_rows, :cols => @text_ctrl_cols %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:link] = capture { %>
+<% if @show_item[:link] then %>
+<tr class="aform_row">
+<% @text_ctrl_rows = 2 %>
+<td class="label">&nbsp;<label for="website_function_link">Link</label></td>
+<td class="value">&nbsp;<%= text_area 'website_function', 'link', :rows => @text_ctrl_rows, :cols => @text_ctrl_cols %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:seq_no] = capture { %>
+<% if @show_item[:seq_no] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="website_function_seq_no">Seq No&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'website_function', 'seq_no', :size => "14" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:task] = capture { %>
+<% if @show_item[:task] then %>
+
+    <!-- Task -->
+
+<tr class="aform_row">
+
+<td class="label">&nbsp;<label for="website_function_functions">Task</label></td>
+
+<td class="value">&nbsp;<%= 
+  @task_choices = (@task_choices || TaskObj.choices_for(@website_function,'task'))
+  current = (@website_function.task && @website_function.task.id)
+  options = options_for_select([["--select--",""]] + @task_choices.collect{|x| [ x.sname, x.id ]}, current)
+  select("website_function", "task_task_obj_id", options)
+%></td>
+
+</tr>
+<% end %>
+<% } %>
+
+<%     @ft_view_section_order = []
+       @ft_view_section_order << :name
+       @ft_view_section_order << :description
+       @ft_view_section_order << :link
+       @ft_view_section_order << :seq_no
+       @ft_view_section_order << :task
+%>
+
+<!-- BEGIN-UID.user_section_ordering -->
+
+<!-- END-UID.user_section_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+
+
+<!-- BEGIN-UID.user_fields -->
+
+<!-- END-UID.user_fields -->
+
+</table>
+
+
+<!--[eoform:website_function]-->

@@ -1,0 +1,122 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   @ft_view_section = {}
+
+   @edit_ctrl_cols = @edit_ctrl_cols || 60
+
+   @text_ctrl_rows = @text_ctrl_rows || 8
+   @text_ctrl_cols = @text_ctrl_cols || (@edit_ctrl_cols - 1)
+%>
+
+<!-- BEGIN-UID.user_vis_ctrls -->
+
+<%
+   @show_item[:name] = false
+%>
+
+<!-- END-UID.user_vis_ctrls -->
+
+<%= error_messages_for 'role_assignment' %>
+
+<!--[form:role_assignment]-->
+<table class="aform_table">
+
+<% @ft_view_section[:name] = capture { %>
+<% if @show_item[:name] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="role_assignment_name">Name&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'role_assignment', 'name', :size => [60,@edit_ctrl_cols].min, :maxlength => "60", :id => "focus" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:event] = capture { %>
+<% if @show_item[:event] then %>
+
+    <!-- Event -->
+
+<tr class="aform_row">
+
+<td class="label">&nbsp;<label for="role_assignment_assignments">Event</label></td>
+
+<td class="value">&nbsp;<%= 
+  @event_choices = (@event_choices || Event.choices_for(@role_assignment,'event'))
+  current = (@role_assignment.event && @role_assignment.event.id)
+  options = options_for_select([["--select--",""]] + @event_choices.collect{|x| [ x.sname, x.id ]}, current)
+  select("role_assignment", "event_event_id", options)
+%></td>
+
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:volunteer] = capture { %>
+<% if @show_item[:volunteer] then %>
+
+    <!-- Volunteer -->
+
+<tr class="aform_row">
+
+<td class="label">&nbsp;<label for="role_assignment_assignments">Volunteer</label></td>
+
+<td class="value">&nbsp;<%= 
+  @volunteer_choices = (@volunteer_choices || Volunteer.choices_for(@role_assignment,'volunteer'))
+  current = (@role_assignment.volunteer && @role_assignment.volunteer.id)
+  options = options_for_select([["--select--",""]] + @volunteer_choices.collect{|x| [ x.sname, x.id ]}, current)
+  select("role_assignment", "volunteer_volunteer_id", options)
+%></td>
+
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:committee_role] = capture { %>
+<% if @show_item[:committee_role] then %>
+
+    <!-- Committee Role -->
+
+<tr class="aform_row">
+
+<td class="label">&nbsp;<label for="role_assignment_assignments">Committee Role</label></td>
+
+<td class="value">&nbsp;<%= 
+  @committee_role_choices = (@committee_role_choices || CommitteeRole.choices_for(@role_assignment,'committee_role'))
+  current = (@role_assignment.committee_role && @role_assignment.committee_role.id)
+  options = options_for_select([["--select--",""]] + @committee_role_choices.collect{|x| [ x.sname, x.id ]}, current)
+  select("role_assignment", "committee_role_committee_role_id", options)
+%></td>
+
+</tr>
+<% end %>
+<% } %>
+
+<%     @ft_view_section_order = []
+       @ft_view_section_order << :name
+       @ft_view_section_order << :event
+       @ft_view_section_order << :volunteer
+       @ft_view_section_order << :committee_role
+%>
+
+<!-- BEGIN-UID.user_section_ordering -->
+
+<!-- END-UID.user_section_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+
+
+<!-- BEGIN-UID.user_fields -->
+
+<!-- END-UID.user_fields -->
+
+</table>
+
+
+<!--[eoform:role_assignment]-->

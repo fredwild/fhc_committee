@@ -1,0 +1,138 @@
+
+<!-- start toplinks -->
+
+<table class="meeting_toplinks toplinks" style="margin-bottom:15px;" border="0" width="100%">
+<tr>
+<td class="toplinks_lhs">
+
+<p>
+ <%= js_button_to "Tabular View", params.merge(:controller => 'meetings', :action => 'list'), :class => "table_view_button" %>
+<select onchange="javascript: location = this[this.selectedIndex].value;">
+    <option value="#">Select an action...</option>
+    <option value="#">----------------</option>
+    <option value="<%=url_for(:controller => 'meetings', :action => 'new')%>"> Add new Meeting </option>
+    <% unless session['user'] && !session['user'].is_admin? %>
+        <option value="#">----------------</option>
+        <option value="<%=url_for(params.merge(:controller => 'meetings', :action => 'download_csv'))%>"> Download CSV </option>
+        <option value="<%=url_for(:controller => 'meetings', :action => 'csv_upload')%>"> Upload CSV </option>
+    <% end %>
+
+<!-- BEGIN-UID.user_actions -->
+
+<!-- END-UID.user_actions -->
+
+    </select>
+</p>
+
+</td>
+
+<td class="toplinks_rhs">
+</td>
+</tr>
+</table>
+
+<!-- end toplinks -->
+
+<% listtext_op = session['list_text_toggles'] ? "show text" : "hide text" %>
+<%= link_to listtext_op, {:controller => 'fast_ops', :action => 'toggle_list_text_toggle'}, :style => 'font-size:8pt;' %> |
+<% listimage_op = session['list_image_toggles'] ? "show images" : "hide images" %>
+<%= link_to listimage_op, {:controller => 'fast_ops', :action => 'toggle_list_image_toggle'}, :style => 'font-size:8pt;' %>
+
+<% @meetings.each { |obj| %>
+
+    <div class="obj_block">
+    <hr/>
+<div class="block_line_item">
+    <div class="block_label">Name:</div>
+    <% text = obj.name.to_s %>
+    <% text = rc_format(text,"name") %>
+<div class="block_value">
+    <%= link_to text, url_show(obj) %>
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">Purpose:</div>
+    <% text = obj.purpose.to_s %>
+    <% text = rc_format(text,"purpose") %>
+<div class="block_value">
+    <%= text %> 
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">Agenda:</div>
+    <% text = obj.agenda.to_s %>
+    <% text = rc_format(text,"agenda") %>
+<div class="block_value">
+          <% if session['list_text_toggles'] then %>
+             <%= show_hide "show/hide","agenda_attr_#{obj.id}"%>
+             <div class="cell_text_popup" id="agenda_attr_<%=obj.id%>" style="display:none;">
+                <%= text %>
+             </div>
+          <% else %>
+             <%= text %>
+          <% end %>
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">Month Week:</div>
+    <% text = obj.month_week.to_s %>
+    <% text = rc_format(text,"month_week") %>
+<div class="block_value">
+    <%= text %> 
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">Notes:</div>
+    <% text = obj.notes.to_s %>
+    <% text = rc_format(text,"notes") %>
+<div class="block_value">
+          <% if session['list_text_toggles'] then %>
+             <%= show_hide "show/hide","notes_attr_#{obj.id}"%>
+             <div class="cell_text_popup" id="notes_attr_<%=obj.id%>" style="display:none;">
+                <%= text %>
+             </div>
+          <% else %>
+             <%= text %>
+          <% end %>
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">Seq No:</div>
+    <% text = obj.seq_no.to_s %>
+    <% text = rc_format(text,"seq_no") %>
+<div class="block_value">
+    <%= text %> 
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">Month:</div>
+    <div class="block_value">
+        <%= link_to(obj.month.iname, url_show(obj.month)) if obj.month %>
+    </div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">Facilitator:</div>
+    <div class="block_value">
+        <%= link_to(obj.facilitator.iname, url_show(obj.facilitator)) if obj.facilitator %>
+    </div>
+</div>
+    </div>
+
+<% } %>
+
+<p class="spacer">&nbsp;</p>
+
+<p class="meetings_bottom_links bottom_links">
+ <%= js_button_to "Tabular View", params.merge(:controller => 'meetings', :action => 'list'), :class => "table_view_button" %>
+<select onchange="javascript: location = this[this.selectedIndex].value;">
+    <option value="#">Select an action...</option>
+    <option value="#">----------------</option>
+    <option value="<%=url_for(:controller => 'meetings', :action => 'new')%>"> Add new Meeting </option>
+    <% unless session['user'] && !session['user'].is_admin? %>
+        <option value="#">----------------</option>
+        <option value="<%=url_for(params.merge(:controller => 'meetings', :action => 'download_csv'))%>"> Download CSV </option>
+        <option value="<%=url_for(:controller => 'meetings', :action => 'csv_upload')%>"> Upload CSV </option>
+    <% end %>
+    </select>
+</p>
+

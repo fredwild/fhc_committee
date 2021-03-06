@@ -1,0 +1,199 @@
+
+<!-- start toplinks -->
+
+<table class="volunteer_toplinks toplinks" style="margin-bottom:15px;" border="0" width="100%">
+<tr>
+<td class="toplinks_lhs">
+
+<p>
+ <%= js_button_to "Tabular View", params.merge(:controller => 'volunteers', :action => 'list'), :class => "table_view_button" %>
+<select onchange="javascript: location = this[this.selectedIndex].value;">
+    <option value="#">Select an action...</option>
+    <option value="#">----------------</option>
+    <option value="<%=url_for(:controller => 'volunteers', :action => 'new')%>"> Add new Volunteer </option>
+    <% unless session['user'] && !session['user'].is_admin? %>
+        <option value="#">----------------</option>
+        <option value="<%=url_for(params.merge(:controller => 'volunteers', :action => 'download_csv'))%>"> Download CSV </option>
+        <option value="<%=url_for(:controller => 'volunteers', :action => 'csv_upload')%>"> Upload CSV </option>
+    <% end %>
+
+<!-- BEGIN-UID.user_actions -->
+
+<!-- END-UID.user_actions -->
+
+    </select>
+</p>
+
+</td>
+
+<td class="toplinks_rhs">
+</td>
+</tr>
+</table>
+
+<!-- end toplinks -->
+
+<% listtext_op = session['list_text_toggles'] ? "show text" : "hide text" %>
+<%= link_to listtext_op, {:controller => 'fast_ops', :action => 'toggle_list_text_toggle'}, :style => 'font-size:8pt;' %> |
+<% listimage_op = session['list_image_toggles'] ? "show images" : "hide images" %>
+<%= link_to listimage_op, {:controller => 'fast_ops', :action => 'toggle_list_image_toggle'}, :style => 'font-size:8pt;' %>
+
+<% @volunteers.each { |obj| %>
+
+    <div class="obj_block">
+    <hr/>
+<div class="block_line_item">
+    <div class="block_label">L Name:</div>
+    <% text = obj.l_name.to_s %>
+    <% text = rc_format(text,"l_name") %>
+<div class="block_value">
+    <%= link_to text, url_show(obj) %>
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">F Name:</div>
+    <% text = obj.f_name.to_s %>
+    <% text = rc_format(text,"f_name") %>
+<div class="block_value">
+    <%= text %> 
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">Full Name:</div>
+    <% text = obj.full_name.to_s %>
+    <% text = rc_format(text,"full_name") %>
+<div class="block_value">
+    <%= text %> 
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">Email:</div>
+    <% text = obj.email.to_s %>
+    <% text = rc_format(text,"email") %>
+<div class="block_value">
+    <%= text %> 
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">Email Confirmed:</div>
+    <% text = obj.email_confirmed.to_s %>
+    <% text = rc_format(text,"email_confirmed") %>
+<div class="block_value">
+    <%= text %> 
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">User Name:</div>
+    <% text = obj.user_name.to_s %>
+    <% text = rc_format(text,"user_name") %>
+<div class="block_value">
+    <%= text %> 
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">Passwd:</div>
+    <% text = obj.passwd.to_s %>
+    <% text = rc_format(text,"passwd") %>
+<div class="block_value">
+    <%= text %> 
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">Address Line1:</div>
+    <% text = obj.address_line1.to_s %>
+    <% text = rc_format(text,"address_line1") %>
+<div class="block_value">
+    <%= text %> 
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">Address Line2:</div>
+    <% text = obj.address_line2.to_s %>
+    <% text = rc_format(text,"address_line2") %>
+<div class="block_value">
+    <%= text %> 
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">City:</div>
+    <% text = obj.city.to_s %>
+    <% text = rc_format(text,"city") %>
+<div class="block_value">
+    <%= text %> 
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">State:</div>
+    <% text = obj.state.to_s %>
+    <% text = rc_format(text,"state") %>
+<div class="block_value">
+    <%= text %> 
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">Zipcode:</div>
+    <% text = obj.zipcode.to_s %>
+    <% text = rc_format(text,"zipcode") %>
+<div class="block_value">
+    <%= text %> 
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">Cell Phone:</div>
+    <% text = obj.cell_phone.to_s %>
+    <% text = rc_format(text,"cell_phone") %>
+<div class="block_value">
+    <%= text %> 
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">Home Phone:</div>
+    <% text = obj.home_phone.to_s %>
+    <% text = rc_format(text,"home_phone") %>
+<div class="block_value">
+    <%= text %> 
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">Work Phone:</div>
+    <% text = obj.work_phone.to_s %>
+    <% text = rc_format(text,"work_phone") %>
+<div class="block_value">
+    <%= text %> 
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">Missionary Ind:</div>
+    <% text = obj.missionary_ind.to_s %>
+    <% text = rc_format(text,"missionary_ind") %>
+<div class="block_value">
+    <%= text %> 
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">Created At:</div>
+    <% text = obj.created_at.to_s.empty? ? "" : obj.created_at.to_date_image %>
+<div class="block_value">
+    <%= text %> 
+</div>
+</div>
+    </div>
+
+<% } %>
+
+<p class="spacer">&nbsp;</p>
+
+<p class="volunteers_bottom_links bottom_links">
+ <%= js_button_to "Tabular View", params.merge(:controller => 'volunteers', :action => 'list'), :class => "table_view_button" %>
+<select onchange="javascript: location = this[this.selectedIndex].value;">
+    <option value="#">Select an action...</option>
+    <option value="#">----------------</option>
+    <option value="<%=url_for(:controller => 'volunteers', :action => 'new')%>"> Add new Volunteer </option>
+    <% unless session['user'] && !session['user'].is_admin? %>
+        <option value="#">----------------</option>
+        <option value="<%=url_for(params.merge(:controller => 'volunteers', :action => 'download_csv'))%>"> Download CSV </option>
+        <option value="<%=url_for(:controller => 'volunteers', :action => 'csv_upload')%>"> Upload CSV </option>
+    <% end %>
+    </select>
+</p>
+

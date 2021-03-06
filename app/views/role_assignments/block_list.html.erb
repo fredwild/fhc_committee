@@ -1,0 +1,90 @@
+
+<!-- start toplinks -->
+
+<table class="role_assignment_toplinks toplinks" style="margin-bottom:15px;" border="0" width="100%">
+<tr>
+<td class="toplinks_lhs">
+
+<p>
+ <%= js_button_to "Tabular View", params.merge(:controller => 'role_assignments', :action => 'list'), :class => "table_view_button" %>
+<select onchange="javascript: location = this[this.selectedIndex].value;">
+    <option value="#">Select an action...</option>
+    <option value="#">----------------</option>
+    <option value="<%=url_for(:controller => 'role_assignments', :action => 'new')%>"> Add new Role Assignment </option>
+    <% unless session['user'] && !session['user'].is_admin? %>
+        <option value="#">----------------</option>
+        <option value="<%=url_for(params.merge(:controller => 'role_assignments', :action => 'download_csv'))%>"> Download CSV </option>
+        <option value="<%=url_for(:controller => 'role_assignments', :action => 'csv_upload')%>"> Upload CSV </option>
+    <% end %>
+
+<!-- BEGIN-UID.user_actions -->
+
+<!-- END-UID.user_actions -->
+
+    </select>
+</p>
+
+</td>
+
+<td class="toplinks_rhs">
+</td>
+</tr>
+</table>
+
+<!-- end toplinks -->
+
+<% listtext_op = session['list_text_toggles'] ? "show text" : "hide text" %>
+<%= link_to listtext_op, {:controller => 'fast_ops', :action => 'toggle_list_text_toggle'}, :style => 'font-size:8pt;' %> |
+<% listimage_op = session['list_image_toggles'] ? "show images" : "hide images" %>
+<%= link_to listimage_op, {:controller => 'fast_ops', :action => 'toggle_list_image_toggle'}, :style => 'font-size:8pt;' %>
+
+<% @role_assignments.each { |obj| %>
+
+    <div class="obj_block">
+    <hr/>
+<div class="block_line_item">
+    <div class="block_label">Name:</div>
+    <% text = obj.name.to_s %>
+    <% text = rc_format(text,"name") %>
+<div class="block_value">
+    <%= link_to text, url_show(obj) %>
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">Event:</div>
+    <div class="block_value">
+        <%= link_to(obj.event.iname, url_show(obj.event)) if obj.event %>
+    </div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">Volunteer:</div>
+    <div class="block_value">
+        <%= link_to(obj.volunteer.iname, url_show(obj.volunteer)) if obj.volunteer %>
+    </div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">Committee Role:</div>
+    <div class="block_value">
+        <%= link_to(obj.committee_role.iname, url_show(obj.committee_role)) if obj.committee_role %>
+    </div>
+</div>
+    </div>
+
+<% } %>
+
+<p class="spacer">&nbsp;</p>
+
+<p class="role_assignments_bottom_links bottom_links">
+ <%= js_button_to "Tabular View", params.merge(:controller => 'role_assignments', :action => 'list'), :class => "table_view_button" %>
+<select onchange="javascript: location = this[this.selectedIndex].value;">
+    <option value="#">Select an action...</option>
+    <option value="#">----------------</option>
+    <option value="<%=url_for(:controller => 'role_assignments', :action => 'new')%>"> Add new Role Assignment </option>
+    <% unless session['user'] && !session['user'].is_admin? %>
+        <option value="#">----------------</option>
+        <option value="<%=url_for(params.merge(:controller => 'role_assignments', :action => 'download_csv'))%>"> Download CSV </option>
+        <option value="<%=url_for(:controller => 'role_assignments', :action => 'csv_upload')%>"> Upload CSV </option>
+    <% end %>
+    </select>
+</p>
+

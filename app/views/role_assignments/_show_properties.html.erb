@@ -1,0 +1,93 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   @ft_view_section = {}
+%>
+
+<!-- BEGIN-UID.user_ctrls -->
+
+<!-- END-UID.user_ctrls -->
+
+<% @ft_view_section[:ft_prop_title] = capture { %>
+<% if @show_item[:ft_prop_title] then %>
+<div class="show_iname">
+   <%= @role_assignment.iname %>
+</div>
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:name] = capture { %>
+<% if @show_item[:name] then %>
+
+  <!-- Name -->
+
+  <div class="show_attr_group attr_group_role_assignment_name ">      <!-- div10 -->
+    <div class="show_attr_label"> Name </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@role_assignment.name.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+<% @ft_view_section[:event] = capture { %>
+<% if @show_item[:event] then %>
+
+    <!-- Event -->
+
+    <div class="show_attr_group attr_group_role_assignment_assignments">     <!-- div16b -->
+      <div class="show_attr_label"> Event </div>         <!-- div17b -->
+      <div class="show_attr_value"> <%= @role_assignment.event.nil? ? "" : link_to(@role_assignment.event.iname, url_show(@role_assignment.event)) %>&nbsp;</div>
+    </div>         <!-- end div16b -->
+
+<% end %>
+<% } %>
+
+<% @ft_view_section[:volunteer] = capture { %>
+<% if @show_item[:volunteer] then %>
+
+    <!-- Volunteer -->
+
+    <div class="show_attr_group attr_group_role_assignment_assignments">     <!-- div16b -->
+      <div class="show_attr_label"> Volunteer </div>         <!-- div17b -->
+      <div class="show_attr_value"> <%= @role_assignment.volunteer.nil? ? "" : link_to(@role_assignment.volunteer.iname, url_show(@role_assignment.volunteer)) %>&nbsp;</div>
+    </div>         <!-- end div16b -->
+
+<% end %>
+<% } %>
+
+<% @ft_view_section[:committee_role] = capture { %>
+<% if @show_item[:committee_role] then %>
+
+    <!-- Committee Role -->
+
+    <div class="show_attr_group attr_group_role_assignment_assignments">     <!-- div16b -->
+      <div class="show_attr_label"> Committee Role </div>         <!-- div17b -->
+      <div class="show_attr_value"> <%= @role_assignment.committee_role.nil? ? "" : link_to(@role_assignment.committee_role.iname, url_show(@role_assignment.committee_role)) %>&nbsp;</div>
+    </div>         <!-- end div16b -->
+
+<% end %>
+<% } %>
+
+<% @ft_view_section_order = []
+   @ft_view_section_order << :ft_prop_title
+   @ft_view_section_order << :name
+   @ft_view_section_order << :event
+   @ft_view_section_order << :volunteer
+   @ft_view_section_order << :committee_role
+%>
+
+<!-- BEGIN-UID.user_ordering -->
+
+<!-- END-UID.user_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+

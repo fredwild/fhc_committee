@@ -1,0 +1,219 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   view_params = { :form_name => 'role_assignments/form' }
+   @ft_view_section = {}
+
+   dir_ind = params['direction'] || 'ASC'
+   asc_desc = Hash.new(dir_ind)
+   asc_desc[ params['order_by'].to_s ] = ( dir_ind['ASC'] ? 'DESC' : 'ASC')
+
+   darrow = Hash.new("")
+   darrow[ params['order_by'].to_s ] = (dir_ind == 'ASC' ? " &uarr;" : " &darr;")
+%>
+<% unless @embedded %>
+
+<div class="buttons_etc buttons_etc_top">
+<table class="buttons_etc_top_table" border="0" cellspacing="0">
+<tr>
+  <td width="60%" valign="top">
+    <%= js_button_to 'Normal View', :controller => 'role_assignments', :action => 'show', :id => @role_assignment %> 
+    <select onchange="javascript: location = this[this.selectedIndex].value;">
+      <option value="#">Select an action...</option>
+      <option value="#">----------------</option>
+    <option value="<%=url_for(:controller => 'role_assignments', :action => 'list')%>"> <%="Table of Role Assignment".pluralize%> </option>
+    <option value="<%=url_for(:controller => 'role_assignments', :action => 'block_list')%>"> <%="List of Role Assignment".pluralize%> </option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'role_assignments', :action => 'new')%>"> Add new Role Assignment </option>
+
+    <option value="#">----------------</option>
+
+<!-- BEGIN-UID.user_actions -->
+
+<!-- END-UID.user_actions -->
+
+    </select>
+  </td>
+  <td class="context" width="40%">
+   <%=context_links(@role_assignment)%>
+  </td>
+</tr>
+</table>
+</div>
+
+<% end %>
+
+<!-- BEGIN-UID.user_mods -->
+
+<!-- END-UID.user_mods -->
+
+<fieldset>
+<LEGEND>Properties</LEGEND>
+
+<% form_tag(:controller => 'role_assignments', :action => 'update', :id => @role_assignment) do %>
+  <p class="submit_top">&nbsp;<%= submit_tag 'Save Changes' %> </p>
+  <%= render :partial => view_params[:form_name] %>
+  <p class="submit_bottom">&nbsp;<%= submit_tag 'Save Changes' %> </p>
+<% end %> <!-- end form_tag -->
+
+</fieldset>
+
+<p class="spacer">&nbsp;</p>
+
+<div class="edit_view edit_view_role_assignment">              <!-- div1 -->
+
+<!-- BEGIN-UID.user_related_items -->
+<h3 class="rel_items_heading">Related Items</h3>
+<!-- END-UID.user_related_items -->
+
+<div class="show_hide_subtable_text">
+<% listtext_op = session['list_text_toggles'] ? "show text" : "hide text" %>
+<%= link_to listtext_op, {:controller => 'fast_ops', :action => 'toggle_list_text_toggle'}, :style => 'font-size:8pt;' %> | 
+<% listimage_op = session['list_image_toggles'] ? "show images" : "hide images" %>
+<%= link_to listimage_op, {:controller => 'fast_ops', :action => 'toggle_list_image_toggle'}, :style => 'font-size:8pt;' %>
+</div>
+
+<% @ft_view_section = {} %>
+
+<% @ft_view_section[:assigned_committees] = capture { %>
+<% if @show_item[:assigned_committees] then %>
+
+  <!-- Committees Under Guidance -->
+
+  <a name="assigned_committees"></a>
+
+  <div id="show_rel_assigned_committees" class="show_rel show_rel_assigned_committees">                                                 <!-- div28 -->
+    <div class="detail_quick_add detail_quick_add_committee" id="quick_add_role_assignment_assigned_committees" style="float:right;">
+        <%= show_hide "Quick-add Committees by code", 'quick_add_assigned_committees' %>
+        <div id="quick_add_assigned_committees" style="display:none; margin-bottom:4px; padding:8px;">
+            enter one code per line
+            <% form_tag(:controller => 'role_assignments', :action => 'quick_add_assigned_committees', :id => @role_assignment.id) do %>
+                <%=text_area_tag 'names', {}, :style=>"width:2in; height:0.5in;"%> <br />
+                <%=submit_tag 'Add Committees'%>
+            <% end %>
+        </div>
+    </div>
+
+    <div id="show_rel_assigned_committees_label" class="rel_label"> Committees Under Guidance &nbsp; <%= show_hide('show/hide','show_rel_assigned_committees_value')%> </div>        <!-- div29 -->
+
+    <div id="show_rel_assigned_committees_value" class="rel_value">                                                                           <!-- div30 -->
+        <table class="detail" cellspacing="1">
+          <tr>
+        <th>&nbsp;</th>
+            <th> <%= link_to "Code"+darrow['code'], { :controller => @role_assignment.ctrlr_name, :action => params[:action], :id => @role_assignment, :order_sublist => 'assigned_committees', :order_by => 'code', :direction => asc_desc['code'] }, :class => 'col_sorting_link' %> </th>
+            <th> <%= link_to "Name"+darrow['name'], { :controller => @role_assignment.ctrlr_name, :action => params[:action], :id => @role_assignment, :order_sublist => 'assigned_committees', :order_by => 'name', :direction => asc_desc['name'] }, :class => 'col_sorting_link' %> </th>
+            <th> <%= link_to "Picture"+darrow['picture'], { :controller => @role_assignment.ctrlr_name, :action => params[:action], :id => @role_assignment, :order_sublist => 'assigned_committees', :order_by => 'picture', :direction => asc_desc['picture'] }, :class => 'col_sorting_link' %> </th>
+            <th> <%= link_to "Seq No"+darrow['seq_no'], { :controller => @role_assignment.ctrlr_name, :action => params[:action], :id => @role_assignment, :order_sublist => 'assigned_committees', :order_by => 'seq_no', :direction => asc_desc['seq_no'] }, :class => 'col_sorting_link' %> </th>
+          <th>&nbsp;</th>
+          </tr>
+
+          <% prev_item = nil %>
+          <% for committee in (@assigned_committees || []) %>
+            <tr>
+
+              <td class="links no_lf">
+              <%= link_to image_tag("blue_x.jpg",{:border=>"0", :title => 'Remove'}), {:controller => 'role_assignments', :action => 'remove_from_assigned_committees', :id => @role_assignment.id, :committee_id => committee.id} %>
+              &nbsp; <%= link_to image_tag("pencil.gif",{:border=>"0", :title => 'Edit'}), {:controller => committee.ctrlr_name, :action => 'edit', :id => committee.id, 
+                                           :return_to_controller => 'role_assignments', :return_to_action => 'edit', :return_to_id => @role_assignment.id} %> 
+              </td>
+
+            <td class="no_lf">
+              <% text = committee.code.to_s %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <%= link_to text, url_show(committee), :class => "identity_link" %> 
+            </td>
+
+            <td class="no_lf">
+              <% text = committee.name.to_s %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <%= text %> 
+            </td>
+
+            <td class="no_lf">
+              <% text = committee.picture.to_s %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <% if session['list_image_toggles'] && committee.picture && image_exist?(committee.picture) then %>
+                 <%= show_hide "show/hide","picture_attr_#{committee.id}"%>
+                 <div class="cell_text_popup" id="picture_attr_<%=committee.id%>" style="display:none;">
+                   <%= image_tag_or_crlink(committee.picture,'Picture') %>
+                 </div>
+              <% else %>
+                 <%= image_tag_or_crlink(committee.picture,'Picture') %>
+              <% end %>
+            </td>
+
+            <td class="no_lf">
+              <% text = committee.seq_no.to_s %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <%= text %> 
+            </td>
+
+      <% if prev_item then %>
+        <td style="text-align:center"><%= link_to "&uarr;", :controller => 'committees', :action => 'swap_seq_nos', :obj1_id => prev_item.id, :obj2_id => committee.id %></td>
+      <% else %>
+        <td>&nbsp;</td>
+      <% end %>
+            </tr>
+            <% prev_item = committee %>
+          <% end %>
+        <tr>
+        <td class="cmd" colspan="13">
+        <%= link_to 'Add Committee', :controller => 'role_assignments', :action => 'add_to_assigned_committees', :id => @role_assignment.id, :obj_context => @role_assignment.iname %> 
+        </td>
+        </tr>
+        </table>
+
+    </div>          <!-- div31 -->
+  </div>            <!-- div32 -->
+<% end %>
+<% } %>
+
+<% @ft_view_section_order = []
+   @ft_view_section_order << :assigned_committees
+%>
+
+<!-- BEGIN-UID.user_ordering -->
+
+<!-- END-UID.user_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+
+
+</div>                           <!-- end div1 -->
+
+<% unless @embedded %>
+
+<div class="buttons_etc buttons_etc_bottom">
+<table class="buttons_etc_bottom_table" border="0" cellspacing="0">
+<tr>
+  <td width="60%" valign="top">
+    <%= js_button_to 'Normal View', :controller => 'role_assignments', :action => 'show', :id => @role_assignment %> 
+    <select onchange="javascript: location = this[this.selectedIndex].value;">
+      <option value="#">Select an action...</option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'role_assignments', :action => 'list')%>"> <%="Table of Role Assignment".pluralize%> </option>
+      <option value="<%=url_for(:controller => 'role_assignments', :action => 'block_list')%>"> <%="List of Role Assignment".pluralize%> </option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'role_assignments', :action => 'new')%>"> Add new Role Assignment </option>
+
+    <option value="#">----------------</option>
+
+
+
+    </select>
+  </td>
+  <td class="context" width="40%">
+   <%=context_links(@role_assignment)%>
+  </td>
+</tr>
+</table>
+</div>
+
+<% end %>

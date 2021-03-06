@@ -1,0 +1,18 @@
+  <%
+    cols         = @klass.value_attrs()+@klass.foreign_key_attrs()
+    title        = @klass.name.pluralize.titleize
+    col_headings = cols.inject({}){|h,c| h[c] = c.titleize(); h}
+  %>
+
+    <h3><%= @obj.iname()%></h3>
+  
+    <table class="thinline" style="width:auto;" cellspacing="0" cellpadding="0" border="0">
+
+      <% for col in cols do %>
+        <tr>
+          <th style="text-align:left; width:auto;"><%= col_headings[col].to_s %></th>
+          <td><%= @obj.get_attr_val(col)%></td>
+        </tr>
+      <% end %>
+
+    </table>

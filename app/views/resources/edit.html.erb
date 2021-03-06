@@ -1,0 +1,293 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   view_params = { :form_name => 'resources/form' }
+   @ft_view_section = {}
+
+   dir_ind = params['direction'] || 'ASC'
+   asc_desc = Hash.new(dir_ind)
+   asc_desc[ params['order_by'].to_s ] = ( dir_ind['ASC'] ? 'DESC' : 'ASC')
+
+   darrow = Hash.new("")
+   darrow[ params['order_by'].to_s ] = (dir_ind == 'ASC' ? " &uarr;" : " &darr;")
+%>
+<% unless @embedded %>
+
+<div class="buttons_etc buttons_etc_top">
+<table class="buttons_etc_top_table" border="0" cellspacing="0">
+<tr>
+  <td width="60%" valign="top">
+    <%= js_button_to 'Normal View', :controller => 'resources', :action => 'show', :id => @resource %> 
+    <select onchange="javascript: location = this[this.selectedIndex].value;">
+      <option value="#">Select an action...</option>
+      <option value="#">----------------</option>
+    <option value="<%=url_for(:controller => 'resources', :action => 'list')%>"> <%="Table of Resource".pluralize%> </option>
+    <option value="<%=url_for(:controller => 'resources', :action => 'block_list')%>"> <%="List of Resource".pluralize%> </option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'resources', :action => 'new')%>"> Add new Resource </option>
+
+    <option value="#">----------------</option>
+
+<!-- BEGIN-UID.user_actions -->
+
+<!-- END-UID.user_actions -->
+
+    </select>
+  </td>
+  <td class="context" width="40%">
+   <%=context_links(@resource)%>
+  </td>
+</tr>
+</table>
+</div>
+
+<% end %>
+
+<!-- BEGIN-UID.user_mods -->
+
+<!-- END-UID.user_mods -->
+
+<fieldset>
+<LEGEND>Properties</LEGEND>
+
+<% form_tag(:controller => 'resources', :action => 'update', :id => @resource) do %>
+  <p class="submit_top">&nbsp;<%= submit_tag 'Save Changes' %> </p>
+  <%= render :partial => view_params[:form_name] %>
+  <p class="submit_bottom">&nbsp;<%= submit_tag 'Save Changes' %> </p>
+<% end %> <!-- end form_tag -->
+
+</fieldset>
+
+<p class="spacer">&nbsp;</p>
+
+<div class="edit_view edit_view_resource">              <!-- div1 -->
+
+<!-- BEGIN-UID.user_related_items -->
+<h3 class="rel_items_heading">Related Items</h3>
+<!-- END-UID.user_related_items -->
+
+<div class="show_hide_subtable_text">
+<% listtext_op = session['list_text_toggles'] ? "show text" : "hide text" %>
+<%= link_to listtext_op, {:controller => 'fast_ops', :action => 'toggle_list_text_toggle'}, :style => 'font-size:8pt;' %> | 
+<% listimage_op = session['list_image_toggles'] ? "show images" : "hide images" %>
+<%= link_to listimage_op, {:controller => 'fast_ops', :action => 'toggle_list_image_toggle'}, :style => 'font-size:8pt;' %>
+</div>
+
+<% @ft_view_section = {} %>
+
+<% @ft_view_section[:meeting] = capture { %>
+<% if @show_item[:meeting] then %>
+
+  <!-- Meeting -->
+
+  <a name="meeting"></a>
+
+  <div id="show_rel_meeting" class="show_rel show_rel_meeting">                                                <!-- div33 -->
+    <div class="detail_quick_add" style="float:right;">
+        <%= show_hide "Quick-add Meetings by name", 'quick_add_meeting' %>
+        <div id="quick_add_meeting" style="display:none; margin-bottom:4px; padding:8px;">
+            enter one name per line
+            <% form_tag(:controller => 'resources', :action => 'quick_add_meeting', :id => @resource.id) do %>
+                <%=text_area_tag 'names', {}, :style=>"width:2in; height:0.5in;"%> <br />
+                <%=submit_tag 'Add Meetings'%>
+            <% end %>
+        </div>
+    </div>
+
+    <div id="show_rel_meeting_label" class="rel_label"> Meeting &nbsp; <%= show_hide('show/hide','show_rel_meeting_value')%></div>            <!-- div34 -->
+
+    <div id="show_rel_meeting_value" class="rel_value">                                           <!-- div35 -->
+
+
+        <table class="detail rev_list" cellspacing="1">
+        <tr>
+          <th>&nbsp;</th>
+          <th> <%= link_to "Name"+darrow['name'], { :controller => @resource.ctrlr_name, :action => params[:action], :id => @resource, :order_sublist => 'meeting', :order_by => 'name', :direction => asc_desc['name'] }, :class => 'col_sorting_link' %> </th>
+          <th> <%= link_to "Purpose"+darrow['purpose'], { :controller => @resource.ctrlr_name, :action => params[:action], :id => @resource, :order_sublist => 'meeting', :order_by => 'purpose', :direction => asc_desc['purpose'] }, :class => 'col_sorting_link' %> </th>
+          <th> <%= link_to "Month Week"+darrow['month_week'], { :controller => @resource.ctrlr_name, :action => params[:action], :id => @resource, :order_sublist => 'meeting', :order_by => 'month_week', :direction => asc_desc['month_week'] }, :class => 'col_sorting_link' %> </th>
+          <th> <%= link_to "Seq No"+darrow['seq_no'], { :controller => @resource.ctrlr_name, :action => params[:action], :id => @resource, :order_sublist => 'meeting', :order_by => 'seq_no', :direction => asc_desc['seq_no'] }, :class => 'col_sorting_link' %> </th>
+          <th> <%= link_to("Month"+darrow['month'], { :controller => @resource.ctrlr_name, :action => params[:action], :id => @resource, :order_sublist => 'meeting', :order_by => 'month', :direction => asc_desc['month'] }, :class => 'col_sorting_link') %> </th>
+          <th> <%= link_to("Facilitator"+darrow['facilitator'], { :controller => @resource.ctrlr_name, :action => params[:action], :id => @resource, :order_sublist => 'meeting', :order_by => 'facilitator', :direction => asc_desc['facilitator'] }, :class => 'col_sorting_link') %> </th>
+        </tr>
+
+<% if @meeting != nil %>
+<% for meeting in (@meeting.kind_of? Array) ? @meeting : [ @meeting ] %>
+        <tr>
+    <td class="links no_lf">
+        <%= link_to image_tag("blue_x.jpg",{:border=>"0", :title => 'Remove'}), {:controller => 'resources', :action => 'remove_from_meeting', :id => @resource.id, :meeting_id => meeting.id} %>
+        </td>
+        <td class="no_lf">
+        <% text = meeting.name.to_s %>
+        <% text = auto_link(text) %>
+            <% text = "&nbsp;" if text.length == 0 %>
+        <%= link_to text, url_show(meeting), :class => 'identity_link' %> 
+        </td>
+        <td class="no_lf">
+        <% text = meeting.purpose.to_s %>
+        <% text = auto_link(text) %>
+            <% text = "&nbsp;" if text.length == 0 %>
+        <%= text %> 
+        </td>
+        <td class="no_lf">
+        <% text = meeting.month_week.to_s %>
+        <% text = auto_link(text) %>
+            <% text = "&nbsp;" if text.length == 0 %>
+        <%= text %> 
+        </td>
+        <td class="no_lf">
+        <% text = meeting.seq_no.to_s %>
+        <% text = auto_link(text) %>
+            <% text = "&nbsp;" if text.length == 0 %>
+        <%= text %> 
+        </td>
+        <td> <%= meeting.month && link_to(meeting.month.iname, url_show(meeting.month)) %>&nbsp;</td>
+        <td> <%= meeting.facilitator && link_to(meeting.facilitator.iname, url_show(meeting.facilitator)) %>&nbsp;</td>
+        </tr> 
+<% end %>
+<% end %>
+        <tr><td class="cmd" colspan="13"> 
+<%= link_to 'Add Meeting', :controller => 'resources', :action => 'add_to_meeting', :id => @resource.id, :obj_context => @resource.iname %> 
+</td></tr>
+        </table>
+
+    </div>           <!-- end div35 -->
+  </div>               <!-- end div33 -->
+<% end %>
+<% } %>
+
+<% @ft_view_section[:tasks] = capture { %>
+<% if @show_item[:tasks] then %>
+
+  <!-- Tasks -->
+
+  <a name="tasks"></a>
+
+  <div id="show_rel_tasks" class="show_rel show_rel_tasks">                                                <!-- div33 -->
+    <div class="detail_quick_add" style="float:right;">
+        <%= show_hide "Quick-add TaskObjs by name", 'quick_add_tasks' %>
+        <div id="quick_add_tasks" style="display:none; margin-bottom:4px; padding:8px;">
+            enter one name per line
+            <% form_tag(:controller => 'resources', :action => 'quick_add_tasks', :id => @resource.id) do %>
+                <%=text_area_tag 'names', {}, :style=>"width:2in; height:0.5in;"%> <br />
+                <%=submit_tag 'Add TaskObjs'%>
+            <% end %>
+        </div>
+    </div>
+
+    <div id="show_rel_tasks_label" class="rel_label"> Tasks &nbsp; <%= show_hide('show/hide','show_rel_tasks_value')%></div>            <!-- div34 -->
+
+    <div id="show_rel_tasks_value" class="rel_value">                                           <!-- div35 -->
+
+
+        <table class="detail rev_list" cellspacing="1">
+        <tr>
+          <th>&nbsp;</th>
+          <th> <%= link_to "Name"+darrow['name'], { :controller => @resource.ctrlr_name, :action => params[:action], :id => @resource, :order_sublist => 'tasks', :order_by => 'name', :direction => asc_desc['name'] }, :class => 'col_sorting_link' %> </th>
+          <th> <%= link_to "Month Week"+darrow['month_week'], { :controller => @resource.ctrlr_name, :action => params[:action], :id => @resource, :order_sublist => 'tasks', :order_by => 'month_week', :direction => asc_desc['month_week'] }, :class => 'col_sorting_link' %> </th>
+          <th> <%= link_to "Key Task"+darrow['key_task'], { :controller => @resource.ctrlr_name, :action => params[:action], :id => @resource, :order_sublist => 'tasks', :order_by => 'key_task', :direction => asc_desc['key_task'] }, :class => 'col_sorting_link' %> </th>
+          <th> <%= link_to "Seq No"+darrow['seq_no'], { :controller => @resource.ctrlr_name, :action => params[:action], :id => @resource, :order_sublist => 'tasks', :order_by => 'seq_no', :direction => asc_desc['seq_no'] }, :class => 'col_sorting_link' %> </th>
+          <th> <%= link_to("Month"+darrow['month'], { :controller => @resource.ctrlr_name, :action => params[:action], :id => @resource, :order_sublist => 'tasks', :order_by => 'month', :direction => asc_desc['month'] }, :class => 'col_sorting_link') %> </th>
+          <th> <%= link_to("Meeting"+darrow['meeting'], { :controller => @resource.ctrlr_name, :action => params[:action], :id => @resource, :order_sublist => 'tasks', :order_by => 'meeting', :direction => asc_desc['meeting'] }, :class => 'col_sorting_link') %> </th>
+          <th> <%= link_to("Predecessor"+darrow['predecessor'], { :controller => @resource.ctrlr_name, :action => params[:action], :id => @resource, :order_sublist => 'tasks', :order_by => 'predecessor', :direction => asc_desc['predecessor'] }, :class => 'col_sorting_link') %> </th>
+          <th> <%= link_to("Commitee"+darrow['commitee'], { :controller => @resource.ctrlr_name, :action => params[:action], :id => @resource, :order_sublist => 'tasks', :order_by => 'commitee', :direction => asc_desc['commitee'] }, :class => 'col_sorting_link') %> </th>
+          <th> <%= link_to("Committee Role"+darrow['committee_role'], { :controller => @resource.ctrlr_name, :action => params[:action], :id => @resource, :order_sublist => 'tasks', :order_by => 'committee_role', :direction => asc_desc['committee_role'] }, :class => 'col_sorting_link') %> </th>
+        </tr>
+
+<% if @tasks != nil %>
+<% for task_obj in (@tasks.kind_of? Array) ? @tasks : [ @tasks ] %>
+        <tr>
+    <td class="links no_lf">
+        <%= link_to image_tag("blue_x.jpg",{:border=>"0", :title => 'Remove'}), {:controller => 'resources', :action => 'remove_from_tasks', :id => @resource.id, :task_obj_id => task_obj.id} %>
+        </td>
+        <td class="no_lf">
+        <% text = task_obj.name.to_s %>
+        <% text = auto_link(text) %>
+            <% text = "&nbsp;" if text.length == 0 %>
+        <%= link_to text, url_show(task_obj), :class => 'identity_link' %> 
+        </td>
+        <td class="no_lf">
+        <% text = task_obj.month_week.to_s %>
+        <% text = auto_link(text) %>
+            <% text = "&nbsp;" if text.length == 0 %>
+        <%= text %> 
+        </td>
+        <td class="no_lf">
+        <% text = task_obj.key_task.to_s %>
+        <% text = auto_link(text) %>
+            <% text = "&nbsp;" if text.length == 0 %>
+        <%= text %> 
+        </td>
+        <td class="no_lf">
+        <% text = task_obj.seq_no.to_s %>
+        <% text = auto_link(text) %>
+            <% text = "&nbsp;" if text.length == 0 %>
+        <%= text %> 
+        </td>
+        <td> <%= task_obj.month && link_to(task_obj.month.iname, url_show(task_obj.month)) %>&nbsp;</td>
+        <td> <%= task_obj.meeting && link_to(task_obj.meeting.iname, url_show(task_obj.meeting)) %>&nbsp;</td>
+        <td> <%= task_obj.predecessor && link_to(task_obj.predecessor.iname, url_show(task_obj.predecessor)) %>&nbsp;</td>
+        <td> <%= task_obj.commitee && link_to(task_obj.commitee.iname, url_show(task_obj.commitee)) %>&nbsp;</td>
+        <td> <%= task_obj.committee_role && link_to(task_obj.committee_role.iname, url_show(task_obj.committee_role)) %>&nbsp;</td>
+        </tr> 
+<% end %>
+<% end %>
+        <tr><td class="cmd" colspan="13"> 
+<%= link_to 'Add Task', :controller => 'resources', :action => 'add_to_tasks', :id => @resource.id, :obj_context => @resource.iname %> 
+</td></tr>
+        </table>
+
+    </div>           <!-- end div35 -->
+  </div>               <!-- end div33 -->
+<% end %>
+<% } %>
+
+<% @ft_view_section_order = []
+   @ft_view_section_order << :meeting
+   @ft_view_section_order << :tasks
+%>
+
+<!-- BEGIN-UID.user_ordering -->
+
+<!-- END-UID.user_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+
+
+</div>                           <!-- end div1 -->
+
+<% unless @embedded %>
+
+<div class="buttons_etc buttons_etc_bottom">
+<table class="buttons_etc_bottom_table" border="0" cellspacing="0">
+<tr>
+  <td width="60%" valign="top">
+    <%= js_button_to 'Normal View', :controller => 'resources', :action => 'show', :id => @resource %> 
+    <select onchange="javascript: location = this[this.selectedIndex].value;">
+      <option value="#">Select an action...</option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'resources', :action => 'list')%>"> <%="Table of Resource".pluralize%> </option>
+      <option value="<%=url_for(:controller => 'resources', :action => 'block_list')%>"> <%="List of Resource".pluralize%> </option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'resources', :action => 'new')%>"> Add new Resource </option>
+
+    <option value="#">----------------</option>
+
+
+
+    </select>
+  </td>
+  <td class="context" width="40%">
+   <%=context_links(@resource)%>
+  </td>
+</tr>
+</table>
+</div>
+
+<% end %>

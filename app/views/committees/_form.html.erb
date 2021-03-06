@@ -1,0 +1,128 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   @ft_view_section = {}
+
+   @edit_ctrl_cols = @edit_ctrl_cols || 60
+
+   @text_ctrl_rows = @text_ctrl_rows || 8
+   @text_ctrl_cols = @text_ctrl_cols || (@edit_ctrl_cols - 1)
+%>
+
+<!-- BEGIN-UID.user_vis_ctrls -->
+
+<!-- END-UID.user_vis_ctrls -->
+
+<%= error_messages_for 'committee' %>
+
+<!--[form:committee]-->
+<table class="aform_table">
+
+<% @ft_view_section[:code] = capture { %>
+<% if @show_item[:code] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="committee_code">Code&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'committee', 'code', :size => [60,@edit_ctrl_cols].min, :maxlength => "60", :id => "focus" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:name] = capture { %>
+<% if @show_item[:name] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="committee_name">Name&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'committee', 'name', :size => [60,@edit_ctrl_cols].min, :maxlength => "60" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:description] = capture { %>
+<% if @show_item[:description] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="committee_description">Description</label></td>
+<td class="value">&nbsp;<%= text_area 'committee', 'description', :rows => @text_ctrl_rows, :cols => @text_ctrl_cols %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:picture] = capture { %>
+<% if @show_item[:picture] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="committee_picture">Picture</label></td>
+<td>
+<% if @committee.picture then %>
+  <% if image_exist?(@committee.picture) then %>
+    <%= image_tag_or_crlink(@committee.picture,'Picture','45%') %> <br />
+    <%= link_to "Remove", url_for(:controller => 'fast_ops', :action => 'delete_image', :delete => @committee.picture) %> |
+  <% end %>
+  <%= link_to "Set Picture", url_for(:controller => 'fast_ops', :action => 'images', :style => 'compact', 
+                       :class_name => @committee.class.name, :instance_id => @committee.id, :attr_name => "picture", 
+                       :upload => @committee.picture) %>
+<% else %>
+  &nbsp;<input type="file" name="picture_form_file" size="36" style="width:320px;"/>
+<% end %>
+</td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:seq_no] = capture { %>
+<% if @show_item[:seq_no] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="committee_seq_no">Seq No&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'committee', 'seq_no', :size => "14" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:oversight] = capture { %>
+<% if @show_item[:oversight] then %>
+
+    <!-- Oversight -->
+
+<tr class="aform_row">
+
+<td class="label">&nbsp;<label for="committee_assigned_committees">Oversight</label></td>
+
+<td class="value">&nbsp;<%= 
+  @oversight_choices = (@oversight_choices || RoleAssignment.choices_for(@committee,'oversight'))
+  current = (@committee.oversight && @committee.oversight.id)
+  options = options_for_select([["--select--",""]] + @oversight_choices.collect{|x| [ x.sname, x.id ]}, current)
+  select("committee", "oversight_role_assignment_id", options)
+%></td>
+
+</tr>
+<% end %>
+<% } %>
+
+<%     @ft_view_section_order = []
+       @ft_view_section_order << :code
+       @ft_view_section_order << :name
+       @ft_view_section_order << :description
+       @ft_view_section_order << :picture
+       @ft_view_section_order << :seq_no
+       @ft_view_section_order << :oversight
+%>
+
+<!-- BEGIN-UID.user_section_ordering -->
+
+<!-- END-UID.user_section_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+
+
+<!-- BEGIN-UID.user_fields -->
+
+<!-- END-UID.user_fields -->
+
+</table>
+
+
+<!--[eoform:committee]-->

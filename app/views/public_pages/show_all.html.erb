@@ -1,0 +1,92 @@
+  
+  <%
+    cols         = @klass.value_attrs()+@klass.foreign_key_attrs()
+    title        = @klass.name.pluralize.titleize
+    col_headings = cols.collect{|c| c.titleize()}
+    order_options = [['',nil],['order',''],['a..z','asc'],['z..a','desc']]
+    
+    params["sort"]       = {} unless params["sort"]
+    params["sort_order"] = {} unless params["sort_order"]
+    params["search"]     = {} unless params["search"]
+    
+    @show_sort   = (not params["sort"].values.max.to_s.empty?)
+    @show_search = (not params["search"].values.max.to_s.empty?)
+  %>
+    
+  <style>
+    th,td,p,li,div { font-size:9pt; font-family:arial; }
+    h3 { font-size:12pt; font-family:arial; }
+    
+    .header { width:98%; margin:10px; }
+    
+    .headline { border: solid 1px silver;}
+    
+    .headline tr th, 
+    .headline tr td { color:white; background:#888; font-weight:normal; padding:2px 8px; 
+                      border-right: solid 1px silver; border-bottom: solid 1px silver; }
+    .headline tr td a { text-decoration:none; } 
+    .headline tr td { color:#333; background:white; text-align:center; }
+    
+  </style>
+  
+  <%
+    nav_links = submit_tag("Refresh", :style => "font-size:8pt; font-family:arial;") + " &nbsp; " + 
+                "<span style=\"color:blue; cursor:pointer;\" onclick=\"$('#sort_row').toggle()\">Sort</span>" + " &nbsp; " +
+                "<span style=\"color:blue; cursor:pointer;\" onclick=\"$('#search_row').toggle()\">Search</span>" + " &nbsp; &nbsp; " +
+                link_to("First",url_for(params.merge({:page_no => 1}))) + 
+                "&nbsp; | &nbsp;" + 
+                link_to("Prev",url_for(params.merge({:page_no => [@page_no-1,1].max}))) + 
+                "&nbsp; | &nbsp;" + 
+                link_to("Next",url_for(params.merge({:page_no => [@page_no+1,@last_page].min}))) + 
+                "&nbsp; | &nbsp;" + 
+                link_to("Last",url_for(params.merge({:page_no => @last_page})))
+  %>
+  
+  <% form_tag(params.reject{|k,v| ! ["controller","action","object","page_no"].include?(k)}) do %>
+
+    <table class="header" cellspacing="0" cellpadding="0" border="0">
+      <tr>
+        <td valign="top">
+          <h3 style="margin:6px 0;"><%= title %></h3>
+        </td>
+        <td align="right" valign="top">
+          <table class="headline" cellspacing="0" cellpadding="0" border="0">
+            <tr>
+              <td><%= @header_info.collect{|inf| inf == "NAV_LINKS" ? nav_links : inf}.join("</td><td>")%></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  
+
+    <table class="thinline" cellspacing="0" cellpadding="0" border="0">
+    
+      <tr>
+        <th><%= col_headings.join("</th><th>")%></th>
+      </tr>
+      
+      <tr id="search_row" style="display:<%= @show_search ? "table-row" : "none"%>;">
+        <td><%= cols.collect{|c| text_field_tag("search[#{c}]",params["search"][c])}.join("</td><td>")%></td>
+      </tr>
+      
+      <tr id="sort_row" style="display:<%= @show_sort ? "table-row" : "none"%>;">
+        <td><%= cols.collect{|c| 
+                                 select_tag("sort_order[#{c}]",options_for_select([['',nil],['rank',0]]+(1..cols.size).to_a.collect{|x| [x,x]},params["sort_order"][c] || "")) + " &nbsp; " +
+                                 select_tag("sort[#{c}]",options_for_select(order_options,params["sort"][c])) 
+                                 }.join("</td><td>")%></td>
+      </tr>
+      
+      <% for row in @rows do %>
+        <% 
+          row_data = cols.collect{|c| row.get_attr_val(c)}
+          row_data[0] = link_to(row_data[0], url_show(row))
+        %>
+        <tr>
+          <td><%= row_data.join("</td><td>")%></td>
+        </tr>
+      <% end %>
+    
+    </table>
+    
+  <% end %>

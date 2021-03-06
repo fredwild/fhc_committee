@@ -1,0 +1,182 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   view_params = { :form_name => 'volunteers/form' }
+   @ft_view_section = {}
+
+   dir_ind = params['direction'] || 'ASC'
+   asc_desc = Hash.new(dir_ind)
+   asc_desc[ params['order_by'].to_s ] = ( dir_ind['ASC'] ? 'DESC' : 'ASC')
+
+   darrow = Hash.new("")
+   darrow[ params['order_by'].to_s ] = (dir_ind == 'ASC' ? " &uarr;" : " &darr;")
+%>
+<% unless @embedded %>
+
+<div class="buttons_etc buttons_etc_top">
+<table class="buttons_etc_top_table" border="0" cellspacing="0">
+<tr>
+  <td width="60%" valign="top">
+    <%= js_button_to 'Normal View', :controller => 'volunteers', :action => 'show', :id => @volunteer %> 
+    <select onchange="javascript: location = this[this.selectedIndex].value;">
+      <option value="#">Select an action...</option>
+      <option value="#">----------------</option>
+    <option value="<%=url_for(:controller => 'volunteers', :action => 'list')%>"> <%="Table of Volunteer".pluralize%> </option>
+    <option value="<%=url_for(:controller => 'volunteers', :action => 'block_list')%>"> <%="List of Volunteer".pluralize%> </option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'volunteers', :action => 'new')%>"> Add new Volunteer </option>
+
+    <option value="#">----------------</option>
+
+<!-- BEGIN-UID.user_actions -->
+
+<!-- END-UID.user_actions -->
+
+    </select>
+  </td>
+  <td class="context" width="40%">
+   <%=context_links(@volunteer)%>
+  </td>
+</tr>
+</table>
+</div>
+
+<% end %>
+
+<!-- BEGIN-UID.user_mods -->
+
+<!-- END-UID.user_mods -->
+
+<fieldset>
+<LEGEND>Properties</LEGEND>
+
+<% form_tag(:controller => 'volunteers', :action => 'update', :id => @volunteer) do %>
+  <p class="submit_top">&nbsp;<%= submit_tag 'Save Changes' %> </p>
+  <%= render :partial => view_params[:form_name] %>
+  <p class="submit_bottom">&nbsp;<%= submit_tag 'Save Changes' %> </p>
+<% end %> <!-- end form_tag -->
+
+</fieldset>
+
+<p class="spacer">&nbsp;</p>
+
+<div class="edit_view edit_view_volunteer">              <!-- div1 -->
+
+<!-- BEGIN-UID.user_related_items -->
+<h3 class="rel_items_heading">Related Items</h3>
+<!-- END-UID.user_related_items -->
+
+<div class="show_hide_subtable_text">
+<% listtext_op = session['list_text_toggles'] ? "show text" : "hide text" %>
+<%= link_to listtext_op, {:controller => 'fast_ops', :action => 'toggle_list_text_toggle'}, :style => 'font-size:8pt;' %> | 
+<% listimage_op = session['list_image_toggles'] ? "show images" : "hide images" %>
+<%= link_to listimage_op, {:controller => 'fast_ops', :action => 'toggle_list_image_toggle'}, :style => 'font-size:8pt;' %>
+</div>
+
+<% @ft_view_section = {} %>
+
+<% @ft_view_section[:assignments] = capture { %>
+<% if @show_item[:assignments] then %>
+
+  <!-- Assignments -->
+
+  <a name="assignments"></a>
+
+  <div id="show_rel_assignments" class="show_rel show_rel_assignments">                                                 <!-- div28 -->
+    <div class="detail_quick_add detail_quick_add_role_assignment" id="quick_add_volunteer_assignments" style="float:right;">
+        <%= show_hide "Quick-add RoleAssignments by name", 'quick_add_assignments' %>
+        <div id="quick_add_assignments" style="display:none; margin-bottom:4px; padding:8px;">
+            enter one name per line
+            <% form_tag(:controller => 'volunteers', :action => 'quick_add_assignments', :id => @volunteer.id) do %>
+                <%=text_area_tag 'names', {}, :style=>"width:2in; height:0.5in;"%> <br />
+                <%=submit_tag 'Add RoleAssignments'%>
+            <% end %>
+        </div>
+    </div>
+
+    <div id="show_rel_assignments_label" class="rel_label"> Assignments &nbsp; <%= show_hide('show/hide','show_rel_assignments_value')%> </div>        <!-- div29 -->
+
+    <div id="show_rel_assignments_value" class="rel_value">                                                                           <!-- div30 -->
+        <table class="detail" cellspacing="1">
+          <tr>
+        <th>&nbsp;</th>
+            <th> <%= link_to("Event"+darrow['event'], { :controller => @volunteer.ctrlr_name, :action => params[:action], :id => @volunteer, :order_sublist => 'assignments', :order_by => 'event', :direction => asc_desc['event'] }, :class => 'col_sorting_link') %> </th>
+            <th> <%= link_to("Committee Role"+darrow['committee_role'], { :controller => @volunteer.ctrlr_name, :action => params[:action], :id => @volunteer, :order_sublist => 'assignments', :order_by => 'committee_role', :direction => asc_desc['committee_role'] }, :class => 'col_sorting_link') %> </th>
+          </tr>
+
+          <% prev_item = nil %>
+          <% for role_assignment in (@assignments || []) %>
+            <tr>
+
+              <td class="links no_lf">
+              <%= link_to image_tag("blue_x.jpg",{:border=>"0", :title => 'Remove'}), {:controller => 'volunteers', :action => 'remove_from_assignments', :id => @volunteer.id, :role_assignment_id => role_assignment.id} %>
+              &nbsp; <%= link_to image_tag("pencil.gif",{:border=>"0", :title => 'Edit'}), {:controller => role_assignment.ctrlr_name, :action => 'edit', :id => role_assignment.id, 
+                                           :return_to_controller => 'volunteers', :return_to_action => 'edit', :return_to_id => @volunteer.id} %> 
+              </td>
+
+        <td> <%= role_assignment.event && link_to(role_assignment.event.iname, url_show(role_assignment.event)) %>&nbsp;</td>
+        <td> <%= role_assignment.committee_role && link_to(role_assignment.committee_role.iname, url_show(role_assignment.committee_role)) %>&nbsp;</td>
+            </tr>
+            <% prev_item = role_assignment %>
+          <% end %>
+        <tr>
+        <td class="cmd" colspan="13">
+        <%= link_to 'Add Role Assignment', :controller => 'volunteers', :action => 'add_to_assignments', :id => @volunteer.id, :obj_context => @volunteer.iname %> 
+        </td>
+        </tr>
+        </table>
+
+    </div>          <!-- div31 -->
+  </div>            <!-- div32 -->
+<% end %>
+<% } %>
+
+<% @ft_view_section_order = []
+   @ft_view_section_order << :assignments
+%>
+
+<!-- BEGIN-UID.user_ordering -->
+
+<!-- END-UID.user_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+
+
+</div>                           <!-- end div1 -->
+
+<% unless @embedded %>
+
+<div class="buttons_etc buttons_etc_bottom">
+<table class="buttons_etc_bottom_table" border="0" cellspacing="0">
+<tr>
+  <td width="60%" valign="top">
+    <%= js_button_to 'Normal View', :controller => 'volunteers', :action => 'show', :id => @volunteer %> 
+    <select onchange="javascript: location = this[this.selectedIndex].value;">
+      <option value="#">Select an action...</option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'volunteers', :action => 'list')%>"> <%="Table of Volunteer".pluralize%> </option>
+      <option value="<%=url_for(:controller => 'volunteers', :action => 'block_list')%>"> <%="List of Volunteer".pluralize%> </option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'volunteers', :action => 'new')%>"> Add new Volunteer </option>
+
+    <option value="#">----------------</option>
+
+
+
+    </select>
+  </td>
+  <td class="context" width="40%">
+   <%=context_links(@volunteer)%>
+  </td>
+</tr>
+</table>
+</div>
+
+<% end %>

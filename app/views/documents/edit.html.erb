@@ -1,0 +1,212 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   view_params = { :form_name => 'documents/form' }
+   @ft_view_section = {}
+
+   dir_ind = params['direction'] || 'ASC'
+   asc_desc = Hash.new(dir_ind)
+   asc_desc[ params['order_by'].to_s ] = ( dir_ind['ASC'] ? 'DESC' : 'ASC')
+
+   darrow = Hash.new("")
+   darrow[ params['order_by'].to_s ] = (dir_ind == 'ASC' ? " &uarr;" : " &darr;")
+%>
+<% unless @embedded %>
+
+<div class="buttons_etc buttons_etc_top">
+<table class="buttons_etc_top_table" border="0" cellspacing="0">
+<tr>
+  <td width="60%" valign="top">
+    <%= js_button_to 'Normal View', :controller => 'documents', :action => 'show', :id => @document %> 
+    <select onchange="javascript: location = this[this.selectedIndex].value;">
+      <option value="#">Select an action...</option>
+      <option value="#">----------------</option>
+    <option value="<%=url_for(:controller => 'documents', :action => 'list')%>"> <%="Table of Document".pluralize%> </option>
+    <option value="<%=url_for(:controller => 'documents', :action => 'block_list')%>"> <%="List of Document".pluralize%> </option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'documents', :action => 'new')%>"> Add new Document </option>
+
+    <option value="#">----------------</option>
+
+<!-- BEGIN-UID.user_actions -->
+
+<!-- END-UID.user_actions -->
+
+    </select>
+  </td>
+  <td class="context" width="40%">
+   <%=context_links(@document)%>
+  </td>
+</tr>
+</table>
+</div>
+
+<% end %>
+
+<!-- BEGIN-UID.user_mods -->
+
+<!-- END-UID.user_mods -->
+
+<fieldset>
+<LEGEND>Properties</LEGEND>
+
+<% form_tag(:controller => 'documents', :action => 'update', :id => @document) do %>
+  <p class="submit_top">&nbsp;<%= submit_tag 'Save Changes' %> </p>
+  <%= render :partial => view_params[:form_name] %>
+  <p class="submit_bottom">&nbsp;<%= submit_tag 'Save Changes' %> </p>
+<% end %> <!-- end form_tag -->
+
+</fieldset>
+
+<p class="spacer">&nbsp;</p>
+
+<div class="edit_view edit_view_document">              <!-- div1 -->
+
+<!-- BEGIN-UID.user_related_items -->
+<h3 class="rel_items_heading">Related Items</h3>
+<!-- END-UID.user_related_items -->
+
+<div class="show_hide_subtable_text">
+<% listtext_op = session['list_text_toggles'] ? "show text" : "hide text" %>
+<%= link_to listtext_op, {:controller => 'fast_ops', :action => 'toggle_list_text_toggle'}, :style => 'font-size:8pt;' %> | 
+<% listimage_op = session['list_image_toggles'] ? "show images" : "hide images" %>
+<%= link_to listimage_op, {:controller => 'fast_ops', :action => 'toggle_list_image_toggle'}, :style => 'font-size:8pt;' %>
+</div>
+
+<% @ft_view_section = {} %>
+
+<% @ft_view_section[:tasks] = capture { %>
+<% if @show_item[:tasks] then %>
+
+  <!-- Tasks -->
+
+  <a name="tasks"></a>
+
+  <div id="show_rel_tasks" class="show_rel show_rel_tasks">                                                <!-- div33 -->
+    <div class="detail_quick_add" style="float:right;">
+        <%= show_hide "Quick-add TaskObjs by name", 'quick_add_tasks' %>
+        <div id="quick_add_tasks" style="display:none; margin-bottom:4px; padding:8px;">
+            enter one name per line
+            <% form_tag(:controller => 'documents', :action => 'quick_add_tasks', :id => @document.id) do %>
+                <%=text_area_tag 'names', {}, :style=>"width:2in; height:0.5in;"%> <br />
+                <%=submit_tag 'Add TaskObjs'%>
+            <% end %>
+        </div>
+    </div>
+
+    <div id="show_rel_tasks_label" class="rel_label"> Tasks &nbsp; <%= show_hide('show/hide','show_rel_tasks_value')%></div>            <!-- div34 -->
+
+    <div id="show_rel_tasks_value" class="rel_value">                                           <!-- div35 -->
+
+
+        <table class="detail rev_list" cellspacing="1">
+        <tr>
+          <th>&nbsp;</th>
+          <th> <%= link_to "Name"+darrow['name'], { :controller => @document.ctrlr_name, :action => params[:action], :id => @document, :order_sublist => 'tasks', :order_by => 'name', :direction => asc_desc['name'] }, :class => 'col_sorting_link' %> </th>
+          <th> <%= link_to "Month Week"+darrow['month_week'], { :controller => @document.ctrlr_name, :action => params[:action], :id => @document, :order_sublist => 'tasks', :order_by => 'month_week', :direction => asc_desc['month_week'] }, :class => 'col_sorting_link' %> </th>
+          <th> <%= link_to "Key Task"+darrow['key_task'], { :controller => @document.ctrlr_name, :action => params[:action], :id => @document, :order_sublist => 'tasks', :order_by => 'key_task', :direction => asc_desc['key_task'] }, :class => 'col_sorting_link' %> </th>
+          <th> <%= link_to "Seq No"+darrow['seq_no'], { :controller => @document.ctrlr_name, :action => params[:action], :id => @document, :order_sublist => 'tasks', :order_by => 'seq_no', :direction => asc_desc['seq_no'] }, :class => 'col_sorting_link' %> </th>
+          <th> <%= link_to("Month"+darrow['month'], { :controller => @document.ctrlr_name, :action => params[:action], :id => @document, :order_sublist => 'tasks', :order_by => 'month', :direction => asc_desc['month'] }, :class => 'col_sorting_link') %> </th>
+          <th> <%= link_to("Meeting"+darrow['meeting'], { :controller => @document.ctrlr_name, :action => params[:action], :id => @document, :order_sublist => 'tasks', :order_by => 'meeting', :direction => asc_desc['meeting'] }, :class => 'col_sorting_link') %> </th>
+          <th> <%= link_to("Predecessor"+darrow['predecessor'], { :controller => @document.ctrlr_name, :action => params[:action], :id => @document, :order_sublist => 'tasks', :order_by => 'predecessor', :direction => asc_desc['predecessor'] }, :class => 'col_sorting_link') %> </th>
+          <th> <%= link_to("Commitee"+darrow['commitee'], { :controller => @document.ctrlr_name, :action => params[:action], :id => @document, :order_sublist => 'tasks', :order_by => 'commitee', :direction => asc_desc['commitee'] }, :class => 'col_sorting_link') %> </th>
+          <th> <%= link_to("Committee Role"+darrow['committee_role'], { :controller => @document.ctrlr_name, :action => params[:action], :id => @document, :order_sublist => 'tasks', :order_by => 'committee_role', :direction => asc_desc['committee_role'] }, :class => 'col_sorting_link') %> </th>
+        </tr>
+
+<% if @tasks != nil %>
+<% for task_obj in (@tasks.kind_of? Array) ? @tasks : [ @tasks ] %>
+        <tr>
+    <td class="links no_lf">
+        <%= link_to image_tag("blue_x.jpg",{:border=>"0", :title => 'Remove'}), {:controller => 'documents', :action => 'remove_from_tasks', :id => @document.id, :task_obj_id => task_obj.id} %>
+        </td>
+        <td class="no_lf">
+        <% text = task_obj.name.to_s %>
+        <% text = auto_link(text) %>
+            <% text = "&nbsp;" if text.length == 0 %>
+        <%= link_to text, url_show(task_obj), :class => 'identity_link' %> 
+        </td>
+        <td class="no_lf">
+        <% text = task_obj.month_week.to_s %>
+        <% text = auto_link(text) %>
+            <% text = "&nbsp;" if text.length == 0 %>
+        <%= text %> 
+        </td>
+        <td class="no_lf">
+        <% text = task_obj.key_task.to_s %>
+        <% text = auto_link(text) %>
+            <% text = "&nbsp;" if text.length == 0 %>
+        <%= text %> 
+        </td>
+        <td class="no_lf">
+        <% text = task_obj.seq_no.to_s %>
+        <% text = auto_link(text) %>
+            <% text = "&nbsp;" if text.length == 0 %>
+        <%= text %> 
+        </td>
+        <td> <%= task_obj.month && link_to(task_obj.month.iname, url_show(task_obj.month)) %>&nbsp;</td>
+        <td> <%= task_obj.meeting && link_to(task_obj.meeting.iname, url_show(task_obj.meeting)) %>&nbsp;</td>
+        <td> <%= task_obj.predecessor && link_to(task_obj.predecessor.iname, url_show(task_obj.predecessor)) %>&nbsp;</td>
+        <td> <%= task_obj.commitee && link_to(task_obj.commitee.iname, url_show(task_obj.commitee)) %>&nbsp;</td>
+        <td> <%= task_obj.committee_role && link_to(task_obj.committee_role.iname, url_show(task_obj.committee_role)) %>&nbsp;</td>
+        </tr> 
+<% end %>
+<% end %>
+        <tr><td class="cmd" colspan="13"> 
+<%= link_to 'Add Task', :controller => 'documents', :action => 'add_to_tasks', :id => @document.id, :obj_context => @document.iname %> 
+</td></tr>
+        </table>
+
+    </div>           <!-- end div35 -->
+  </div>               <!-- end div33 -->
+<% end %>
+<% } %>
+
+<% @ft_view_section_order = []
+   @ft_view_section_order << :tasks
+%>
+
+<!-- BEGIN-UID.user_ordering -->
+
+<!-- END-UID.user_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+
+
+</div>                           <!-- end div1 -->
+
+<% unless @embedded %>
+
+<div class="buttons_etc buttons_etc_bottom">
+<table class="buttons_etc_bottom_table" border="0" cellspacing="0">
+<tr>
+  <td width="60%" valign="top">
+    <%= js_button_to 'Normal View', :controller => 'documents', :action => 'show', :id => @document %> 
+    <select onchange="javascript: location = this[this.selectedIndex].value;">
+      <option value="#">Select an action...</option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'documents', :action => 'list')%>"> <%="Table of Document".pluralize%> </option>
+      <option value="<%=url_for(:controller => 'documents', :action => 'block_list')%>"> <%="List of Document".pluralize%> </option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'documents', :action => 'new')%>"> Add new Document </option>
+
+    <option value="#">----------------</option>
+
+
+
+    </select>
+  </td>
+  <td class="context" width="40%">
+   <%=context_links(@document)%>
+  </td>
+</tr>
+</table>
+</div>
+
+<% end %>

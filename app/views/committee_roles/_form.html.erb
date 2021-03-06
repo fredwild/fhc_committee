@@ -1,0 +1,96 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   @ft_view_section = {}
+
+   @edit_ctrl_cols = @edit_ctrl_cols || 60
+
+   @text_ctrl_rows = @text_ctrl_rows || 8
+   @text_ctrl_cols = @text_ctrl_cols || (@edit_ctrl_cols - 1)
+%>
+
+<!-- BEGIN-UID.user_vis_ctrls -->
+
+<!-- END-UID.user_vis_ctrls -->
+
+<%= error_messages_for 'committee_role' %>
+
+<!--[form:committee_role]-->
+<table class="aform_table">
+
+<% @ft_view_section[:role_name] = capture { %>
+<% if @show_item[:role_name] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="committee_role_role_name">Role Name&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'committee_role', 'role_name', :size => [60,@edit_ctrl_cols].min, :maxlength => "60", :id => "focus" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:description] = capture { %>
+<% if @show_item[:description] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="committee_role_description">Description</label></td>
+<td class="value">&nbsp;<%= text_area 'committee_role', 'description', :rows => @text_ctrl_rows, :cols => @text_ctrl_cols %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:calling_required] = capture { %>
+<% if @show_item[:calling_required] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="committee_role_calling_required">Calling Required</label></td>
+<td class="value">&nbsp;<%= check_box 'committee_role', 'calling_required' %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:name_tag_needed] = capture { %>
+<% if @show_item[:name_tag_needed] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="committee_role_name_tag_needed">Name Tag Needed</label></td>
+<td class="value">&nbsp;<%= check_box 'committee_role', 'name_tag_needed' %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:seq_no] = capture { %>
+<% if @show_item[:seq_no] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="committee_role_seq_no">Seq No&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'committee_role', 'seq_no', :size => "14" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<%     @ft_view_section_order = []
+       @ft_view_section_order << :role_name
+       @ft_view_section_order << :description
+       @ft_view_section_order << :calling_required
+       @ft_view_section_order << :name_tag_needed
+       @ft_view_section_order << :seq_no
+%>
+
+<!-- BEGIN-UID.user_section_ordering -->
+
+<!-- END-UID.user_section_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+
+
+<!-- BEGIN-UID.user_fields -->
+
+<!-- END-UID.user_fields -->
+
+</table>
+
+<input id="committee" type="hidden" name="committee_id" value="<%=@committee ? @committee.id : ''%>"/>
+
+<!--[eoform:committee_role]-->

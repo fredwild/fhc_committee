@@ -1,0 +1,21 @@
+
+<!-- BEGIN-UID.user_ctrls -->
+
+<!-- END-UID.user_ctrls -->
+
+<div id="add_to_event_list">
+   <% form_tag( :controller => 'role_assignments', :action => :update_event, :id => @role_assignment ) do %>
+       <%= submit_tag 'Set Selected' %>
+       <p class="select_list">&nbsp;</p>
+       <% for event in @events %>
+           <p class="select_list"> <%= radio_button_tag("event_id",event.id) %> <%= event.sname %> </p>
+       <% end %>
+       <p class="select_list">&nbsp;</p>
+       <%= submit_tag 'Set Selected' %>
+   <% end %> <!-- end form_tag -->
+</div>
+
+<!-- BEGIN-UID.user_divs -->
+
+<!-- END-UID.user_divs -->
+

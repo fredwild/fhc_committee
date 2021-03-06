@@ -1,0 +1,205 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   @ft_view_section = {}
+
+   @edit_ctrl_cols = @edit_ctrl_cols || 60
+
+   @text_ctrl_rows = @text_ctrl_rows || 8
+   @text_ctrl_cols = @text_ctrl_cols || (@edit_ctrl_cols - 1)
+%>
+
+<!-- BEGIN-UID.user_vis_ctrls -->
+
+<!-- END-UID.user_vis_ctrls -->
+
+<%= error_messages_for 'volunteer' %>
+
+<!--[form:volunteer]-->
+<table class="aform_table">
+
+<% @ft_view_section[:l_name] = capture { %>
+<% if @show_item[:l_name] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="volunteer_l_name">L Name&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'volunteer', 'l_name', :size => [60,@edit_ctrl_cols].min, :maxlength => "60", :id => "focus" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:f_name] = capture { %>
+<% if @show_item[:f_name] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="volunteer_f_name">F Name&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'volunteer', 'f_name', :size => [60,@edit_ctrl_cols].min, :maxlength => "60" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:full_name] = capture { %>
+<% if @show_item[:full_name] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="volunteer_full_name">Full Name&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'volunteer', 'full_name', :size => [60,@edit_ctrl_cols].min, :maxlength => "60" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:email] = capture { %>
+<% if @show_item[:email] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="volunteer_email">Email&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'volunteer', 'email', :size => [60,@edit_ctrl_cols].min, :maxlength => "60" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:email_confirmed] = capture { %>
+<% if @show_item[:email_confirmed] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="volunteer_email_confirmed">Email Confirmed</label></td>
+<td class="value">&nbsp;<%= check_box 'volunteer', 'email_confirmed' %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:user_name] = capture { %>
+<% if @show_item[:user_name] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="volunteer_user_name">User Name&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'volunteer', 'user_name', :size => [60,@edit_ctrl_cols].min, :maxlength => "60" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:passwd] = capture { %>
+<% if @show_item[:passwd] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="volunteer_passwd">Passwd&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'volunteer', 'passwd', :size => [40,@edit_ctrl_cols].min, :maxlength => "40" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:address_line1] = capture { %>
+<% if @show_item[:address_line1] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="volunteer_address_line1">Address Line1&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'volunteer', 'address_line1', :size => [60,@edit_ctrl_cols].min, :maxlength => "60" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:address_line2] = capture { %>
+<% if @show_item[:address_line2] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="volunteer_address_line2">Address Line2&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'volunteer', 'address_line2', :size => [60,@edit_ctrl_cols].min, :maxlength => "60" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:city] = capture { %>
+<% if @show_item[:city] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="volunteer_city">City&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'volunteer', 'city', :size => [60,@edit_ctrl_cols].min, :maxlength => "60" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:state] = capture { %>
+<% if @show_item[:state] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="volunteer_state">State</label></td>
+<td class="value">&nbsp;<%= select 'volunteer', 'state', "-- select --,AL,AK,AS,AZ,AR,CA,CO,CT,DE,DC,FM,FL,GA,GU,HI,ID,IL,IN,IA,KS,KY,LA,ME,MH,MD,MA,MI,MN,MS,MO,MT,NE,NV,NH,NJ,NM,NY,NC,ND,MP,OH,OK,OR,PW,PA,PR,RI,SC,SD,TN,TX,UT,VT,VI,VA,WA,WV,WI,WY".split(/, */) %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:zipcode] = capture { %>
+<% if @show_item[:zipcode] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="volunteer_zipcode">Zipcode&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'volunteer', 'zipcode', :size => [60,@edit_ctrl_cols].min, :maxlength => "60" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:cell_phone] = capture { %>
+<% if @show_item[:cell_phone] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="volunteer_cell_phone">Cell Phone&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'volunteer', 'cell_phone', :size => [60,@edit_ctrl_cols].min, :maxlength => "60" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:home_phone] = capture { %>
+<% if @show_item[:home_phone] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="volunteer_home_phone">Home Phone&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'volunteer', 'home_phone', :size => [60,@edit_ctrl_cols].min, :maxlength => "60" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:work_phone] = capture { %>
+<% if @show_item[:work_phone] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="volunteer_work_phone">Work Phone&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'volunteer', 'work_phone', :size => [60,@edit_ctrl_cols].min, :maxlength => "60" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:missionary_ind] = capture { %>
+<% if @show_item[:missionary_ind] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="volunteer_missionary_ind">Missionary Ind</label></td>
+<td class="value">&nbsp;<%= check_box 'volunteer', 'missionary_ind' %></td>
+</tr>
+<% end %>
+<% } %>
+
+<%     @ft_view_section_order = []
+       @ft_view_section_order << :l_name
+       @ft_view_section_order << :f_name
+       @ft_view_section_order << :full_name
+       @ft_view_section_order << :email
+       @ft_view_section_order << :email_confirmed
+       @ft_view_section_order << :user_name
+       @ft_view_section_order << :passwd
+       @ft_view_section_order << :address_line1
+       @ft_view_section_order << :address_line2
+       @ft_view_section_order << :city
+       @ft_view_section_order << :state
+       @ft_view_section_order << :zipcode
+       @ft_view_section_order << :cell_phone
+       @ft_view_section_order << :home_phone
+       @ft_view_section_order << :work_phone
+       @ft_view_section_order << :missionary_ind
+%>
+
+<!-- BEGIN-UID.user_section_ordering -->
+
+<!-- END-UID.user_section_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+
+
+<!-- BEGIN-UID.user_fields -->
+
+<!-- END-UID.user_fields -->
+
+</table>
+
+
+<!--[eoform:volunteer]-->

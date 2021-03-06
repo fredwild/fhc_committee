@@ -1,0 +1,276 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   @ft_view_section = {}
+%>
+
+<!-- BEGIN-UID.user_ctrls -->
+
+<!-- END-UID.user_ctrls -->
+
+<% @ft_view_section[:ft_prop_title] = capture { %>
+<% if @show_item[:ft_prop_title] then %>
+<div class="show_iname">
+   <%= @volunteer.iname %>
+</div>
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:l_name] = capture { %>
+<% if @show_item[:l_name] then %>
+
+  <!-- L Name -->
+
+  <div class="show_attr_group attr_group_volunteer_l_name ">      <!-- div10 -->
+    <div class="show_attr_label"> L Name </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@volunteer.l_name.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:f_name] = capture { %>
+<% if @show_item[:f_name] then %>
+
+  <!-- F Name -->
+
+  <div class="show_attr_group attr_group_volunteer_f_name ">      <!-- div10 -->
+    <div class="show_attr_label"> F Name </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@volunteer.f_name.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:full_name] = capture { %>
+<% if @show_item[:full_name] then %>
+
+  <!-- Full Name -->
+
+  <div class="show_attr_group attr_group_volunteer_full_name ">      <!-- div10 -->
+    <div class="show_attr_label"> Full Name </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@volunteer.full_name.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:email] = capture { %>
+<% if @show_item[:email] then %>
+
+  <!-- Email -->
+
+  <div class="show_attr_group attr_group_volunteer_email ">      <!-- div10 -->
+    <div class="show_attr_label"> Email </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@volunteer.email.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:email_confirmed] = capture { %>
+<% if @show_item[:email_confirmed] then %>
+
+  <!-- Email Confirmed -->
+
+  <div class="show_attr_group attr_group_volunteer_email_confirmed ">      <!-- div10 -->
+    <div class="show_attr_label"> Email Confirmed </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@volunteer.email_confirmed.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:user_name] = capture { %>
+<% if @show_item[:user_name] then %>
+
+  <!-- User Name -->
+
+  <div class="show_attr_group attr_group_volunteer_user_name ">      <!-- div10 -->
+    <div class="show_attr_label"> User Name </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@volunteer.user_name.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:passwd] = capture { %>
+<% if @show_item[:passwd] then %>
+
+  <!-- Passwd -->
+
+  <div class="show_attr_group attr_group_volunteer_passwd ">      <!-- div10 -->
+    <div class="show_attr_label"> Passwd </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@volunteer.passwd.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:address_line1] = capture { %>
+<% if @show_item[:address_line1] then %>
+
+  <!-- Address Line1 -->
+
+  <div class="show_attr_group attr_group_volunteer_address_line1 ">      <!-- div10 -->
+    <div class="show_attr_label"> Address Line1 </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@volunteer.address_line1.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:address_line2] = capture { %>
+<% if @show_item[:address_line2] then %>
+
+  <!-- Address Line2 -->
+
+  <div class="show_attr_group attr_group_volunteer_address_line2 ">      <!-- div10 -->
+    <div class="show_attr_label"> Address Line2 </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@volunteer.address_line2.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:city] = capture { %>
+<% if @show_item[:city] then %>
+
+  <!-- City -->
+
+  <div class="show_attr_group attr_group_volunteer_city ">      <!-- div10 -->
+    <div class="show_attr_label"> City </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@volunteer.city.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:state] = capture { %>
+<% if @show_item[:state] then %>
+
+  <!-- State -->
+
+  <div class="show_attr_group attr_group_volunteer_state ">      <!-- div10 -->
+    <div class="show_attr_label"> State </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@volunteer.state.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:zipcode] = capture { %>
+<% if @show_item[:zipcode] then %>
+
+  <!-- Zipcode -->
+
+  <div class="show_attr_group attr_group_volunteer_zipcode ">      <!-- div10 -->
+    <div class="show_attr_label"> Zipcode </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@volunteer.zipcode.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:cell_phone] = capture { %>
+<% if @show_item[:cell_phone] then %>
+
+  <!-- Cell Phone -->
+
+  <div class="show_attr_group attr_group_volunteer_cell_phone ">      <!-- div10 -->
+    <div class="show_attr_label"> Cell Phone </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@volunteer.cell_phone.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:home_phone] = capture { %>
+<% if @show_item[:home_phone] then %>
+
+  <!-- Home Phone -->
+
+  <div class="show_attr_group attr_group_volunteer_home_phone ">      <!-- div10 -->
+    <div class="show_attr_label"> Home Phone </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@volunteer.home_phone.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:work_phone] = capture { %>
+<% if @show_item[:work_phone] then %>
+
+  <!-- Work Phone -->
+
+  <div class="show_attr_group attr_group_volunteer_work_phone ">      <!-- div10 -->
+    <div class="show_attr_label"> Work Phone </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@volunteer.work_phone.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:missionary_ind] = capture { %>
+<% if @show_item[:missionary_ind] then %>
+
+  <!-- Missionary Ind -->
+
+  <div class="show_attr_group attr_group_volunteer_missionary_ind ">      <!-- div10 -->
+    <div class="show_attr_label"> Missionary Ind </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@volunteer.missionary_ind.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+<% @ft_view_section_order = []
+   @ft_view_section_order << :ft_prop_title
+   @ft_view_section_order << :l_name
+   @ft_view_section_order << :f_name
+   @ft_view_section_order << :full_name
+   @ft_view_section_order << :email
+   @ft_view_section_order << :email_confirmed
+   @ft_view_section_order << :user_name
+   @ft_view_section_order << :passwd
+   @ft_view_section_order << :address_line1
+   @ft_view_section_order << :address_line2
+   @ft_view_section_order << :city
+   @ft_view_section_order << :state
+   @ft_view_section_order << :zipcode
+   @ft_view_section_order << :cell_phone
+   @ft_view_section_order << :home_phone
+   @ft_view_section_order << :work_phone
+   @ft_view_section_order << :missionary_ind
+%>
+
+<!-- BEGIN-UID.user_ordering -->
+
+<!-- END-UID.user_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+

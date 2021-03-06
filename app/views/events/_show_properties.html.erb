@@ -1,0 +1,66 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   @ft_view_section = {}
+%>
+
+<!-- BEGIN-UID.user_ctrls -->
+
+<!-- END-UID.user_ctrls -->
+
+<% @ft_view_section[:ft_prop_title] = capture { %>
+<% if @show_item[:ft_prop_title] then %>
+<div class="show_iname">
+   <%= @event.iname %>
+</div>
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:year] = capture { %>
+<% if @show_item[:year] then %>
+
+  <!-- Year -->
+
+  <div class="show_attr_group attr_group_event_year ">      <!-- div10 -->
+    <div class="show_attr_label"> Year </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"><%= auto_link(@event.year.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:objectives] = capture { %>
+<% if @show_item[:objectives] then %>
+
+  <!-- Objectives -->
+
+  <div class="show_attr_group attr_group_event_objectives ">      <!-- div10 -->
+    <div class="show_attr_label"> Objectives </div>                    <!-- div11 -->
+    <div class="show_attr_value multiline"><%= rc_format(@event.objectives.to_s,"objectives") %></div>   <!-- div12g -->
+  </div>   <!-- div10 end -->
+<% end %>
+<% } %>
+
+
+<% @ft_view_section_order = []
+   @ft_view_section_order << :ft_prop_title
+   @ft_view_section_order << :year
+   @ft_view_section_order << :objectives
+%>
+
+<!-- BEGIN-UID.user_ordering -->
+
+<!-- END-UID.user_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+

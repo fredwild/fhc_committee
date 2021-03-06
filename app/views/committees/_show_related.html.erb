@@ -1,0 +1,185 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   @ft_view_section = {}
+
+   dir_ind = params['direction'] || 'ASC'
+   asc_desc = Hash.new(dir_ind)
+   asc_desc[ params['order_by'].to_s ] = ( dir_ind['ASC'] ? 'DESC' : 'ASC')
+
+   darrow = Hash.new("")
+   darrow[params['order_by'].to_s] = (dir_ind == 'ASC' ? " &uarr;" : " &darr;")
+
+%>
+
+<div class="show_hide_subtable_text">
+<% listtext_op = session['list_text_toggles'] ? "show text" : "hide text" %> 
+<%= link_to listtext_op, {:controller => 'fast_ops', :action => 'toggle_list_text_toggle'}, :style => 'font-size:8pt;' %> |
+<% listimage_op = session['list_image_toggles'] ? "show images" : "hide images" %>
+<%= link_to listimage_op, {:controller => 'fast_ops', :action => 'toggle_list_image_toggle'}, :style => 'font-size:8pt;' %>
+</div>
+
+
+<!-- BEGIN-UID.user_ctrls -->
+
+<!-- END-UID.user_ctrls -->
+
+
+<% @ft_view_section[:tasks] = capture { %>
+<% if @show_item[:tasks] then %>
+
+  <!-- Tasks -->
+
+  <a name="tasks"></a>
+
+  <div id="show_rel_tasks" class="show_rel show_rel_tasks">                                                 <!-- div28 -->
+    <div id="show_rel_tasks_label" class="rel_label"> Tasks &nbsp; <%= show_hide('show/hide','show_rel_tasks_value')%> </div>        <!-- div29 -->
+
+    <div id="show_rel_tasks_value" class="rel_value">                                                                           <!-- div30 -->
+        <table class="detail" cellspacing="1">
+          <tr>
+            <th> <%= link_to "Name"+darrow['name'], { :controller => @committee.ctrlr_name, :action => params[:action], :id => @committee, :order_sublist => 'tasks', :order_by => 'name', :direction => asc_desc['name'] }, :class => 'col_sorting_link' %> </th>
+            <th> <%= link_to "Month Week"+darrow['month_week'], { :controller => @committee.ctrlr_name, :action => params[:action], :id => @committee, :order_sublist => 'tasks', :order_by => 'month_week', :direction => asc_desc['month_week'] }, :class => 'col_sorting_link' %> </th>
+            <th> <%= link_to "Key Task"+darrow['key_task'], { :controller => @committee.ctrlr_name, :action => params[:action], :id => @committee, :order_sublist => 'tasks', :order_by => 'key_task', :direction => asc_desc['key_task'] }, :class => 'col_sorting_link' %> </th>
+            <th> <%= link_to "Seq No"+darrow['seq_no'], { :controller => @committee.ctrlr_name, :action => params[:action], :id => @committee, :order_sublist => 'tasks', :order_by => 'seq_no', :direction => asc_desc['seq_no'] }, :class => 'col_sorting_link' %> </th>
+            <th> <%= link_to("Month"+darrow['month'], { :controller => @committee.ctrlr_name, :action => params[:action], :id => @committee, :order_sublist => 'tasks', :order_by => 'month', :direction => asc_desc['month'] }, :class => 'col_sorting_link') %> </th>
+            <th> <%= link_to("Meeting"+darrow['meeting'], { :controller => @committee.ctrlr_name, :action => params[:action], :id => @committee, :order_sublist => 'tasks', :order_by => 'meeting', :direction => asc_desc['meeting'] }, :class => 'col_sorting_link') %> </th>
+            <th> <%= link_to("Predecessor"+darrow['predecessor'], { :controller => @committee.ctrlr_name, :action => params[:action], :id => @committee, :order_sublist => 'tasks', :order_by => 'predecessor', :direction => asc_desc['predecessor'] }, :class => 'col_sorting_link') %> </th>
+            <th> <%= link_to("Committee Role"+darrow['committee_role'], { :controller => @committee.ctrlr_name, :action => params[:action], :id => @committee, :order_sublist => 'tasks', :order_by => 'committee_role', :direction => asc_desc['committee_role'] }, :class => 'col_sorting_link') %> </th>
+          <th>&nbsp;</th>
+          </tr>
+
+          <% prev_item = nil %>
+          <% for task_obj in (@tasks || []) %>
+            <tr>
+            <td class="no_lf">
+              <% text = task_obj.name.to_s %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <%= link_to text, url_show(task_obj), :class => "identity_link" %> 
+            </td>
+
+            <td class="no_lf">
+              <% text = task_obj.month_week.to_s %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <%= text %> 
+            </td>
+
+            <td class="no_lf">
+              <% text = task_obj.key_task.to_s %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <%= text %> 
+            </td>
+
+            <td class="no_lf">
+              <% text = task_obj.seq_no.to_s %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <%= text %> 
+            </td>
+
+        <td> <%= task_obj.month && link_to(task_obj.month.iname, url_show(task_obj.month)) %>&nbsp;</td>
+        <td> <%= task_obj.meeting && link_to(task_obj.meeting.iname, url_show(task_obj.meeting)) %>&nbsp;</td>
+        <td> <%= task_obj.predecessor && link_to(task_obj.predecessor.iname, url_show(task_obj.predecessor)) %>&nbsp;</td>
+        <td> <%= task_obj.committee_role && link_to(task_obj.committee_role.iname, url_show(task_obj.committee_role)) %>&nbsp;</td>
+      <% if prev_item then %>
+        <td style="text-align:center"><%= link_to "&uarr;", :controller => 'task_objs', :action => 'swap_seq_nos', :obj1_id => prev_item.id, :obj2_id => task_obj.id %></td>
+      <% else %>
+        <td>&nbsp;</td>
+      <% end %>
+            </tr>
+            <% prev_item = task_obj %>
+          <% end %>
+        </table>
+
+    </div>          <!-- div31 -->
+  </div>            <!-- div32 -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:committee_roles] = capture { %>
+<% if @show_item[:committee_roles] then %>
+
+  <!-- Committee Roles -->
+
+  <a name="committee_roles"></a>
+
+  <div id="show_rel_committee_roles" class="show_rel show_rel_committee_roles">                                                 <!-- div28 -->
+    <div id="show_rel_committee_roles_label" class="rel_label"> Committee Roles &nbsp; <%= show_hide('show/hide','show_rel_committee_roles_value')%> </div>        <!-- div29 -->
+
+    <div id="show_rel_committee_roles_value" class="rel_value">                                                                           <!-- div30 -->
+        <table class="detail" cellspacing="1">
+          <tr>
+            <th> <%= link_to "Role Name"+darrow['role_name'], { :controller => @committee.ctrlr_name, :action => params[:action], :id => @committee, :order_sublist => 'committee_roles', :order_by => 'role_name', :direction => asc_desc['role_name'] }, :class => 'col_sorting_link' %> </th>
+            <th> <%= link_to "Calling Required"+darrow['calling_required'], { :controller => @committee.ctrlr_name, :action => params[:action], :id => @committee, :order_sublist => 'committee_roles', :order_by => 'calling_required', :direction => asc_desc['calling_required'] }, :class => 'col_sorting_link' %> </th>
+            <th> <%= link_to "Name Tag Needed"+darrow['name_tag_needed'], { :controller => @committee.ctrlr_name, :action => params[:action], :id => @committee, :order_sublist => 'committee_roles', :order_by => 'name_tag_needed', :direction => asc_desc['name_tag_needed'] }, :class => 'col_sorting_link' %> </th>
+            <th> <%= link_to "Seq No"+darrow['seq_no'], { :controller => @committee.ctrlr_name, :action => params[:action], :id => @committee, :order_sublist => 'committee_roles', :order_by => 'seq_no', :direction => asc_desc['seq_no'] }, :class => 'col_sorting_link' %> </th>
+          <th>&nbsp;</th>
+          </tr>
+
+          <% prev_item = nil %>
+          <% for committee_role in (@committee_roles || []) %>
+            <tr>
+            <td class="no_lf">
+              <% text = committee_role.role_name.to_s %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <%= link_to text, url_show(committee_role), :class => "identity_link" %> 
+            </td>
+
+            <td class="no_lf">
+              <% text = committee_role.calling_required.to_s %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <%= text %> 
+            </td>
+
+            <td class="no_lf">
+              <% text = committee_role.name_tag_needed.to_s %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <%= text %> 
+            </td>
+
+            <td class="no_lf">
+              <% text = committee_role.seq_no.to_s %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <%= text %> 
+            </td>
+
+      <% if prev_item then %>
+        <td style="text-align:center"><%= link_to "&uarr;", :controller => 'committee_roles', :action => 'swap_seq_nos', :obj1_id => prev_item.id, :obj2_id => committee_role.id %></td>
+      <% else %>
+        <td>&nbsp;</td>
+      <% end %>
+            </tr>
+            <% prev_item = committee_role %>
+          <% end %>
+        </table>
+
+    </div>          <!-- div31 -->
+  </div>            <!-- div32 -->
+<% end %>
+<% } %>
+
+
+<% @ft_view_section_order = []
+   @ft_view_section_order << :tasks
+   @ft_view_section_order << :committee_roles
+%>
+
+<!-- BEGIN-UID.user_ordering -->
+
+<% @ft_view_section_order = []
+   @ft_view_section_order << :committee_roles
+   @ft_view_section_order << :tasks
+%>
+
+<!-- END-UID.user_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+

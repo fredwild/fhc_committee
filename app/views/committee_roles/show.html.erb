@@ -1,0 +1,123 @@
+<% unless @embedded %>
+
+<div class="buttons_etc buttons_etc_top">
+<table class="buttons_etc_top_table" border="0" cellspacing="0">
+<tr>
+  <td width="60%" valign="top">
+    <%= js_button_to 'Modify', :controller => 'committee_roles', :action => 'edit', :id => @committee_role %> 
+    <select onchange="javascript: location = this[this.selectedIndex].value;">
+      <option value="#">Select an action...</option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'committee_roles', :action => 'show', :id => @committee_role.id)%>"> Normal Format </option>
+      <option value="<%=url_for(:controller => 'committee_roles', :action => 'show_as_doc', :id => @committee_role.id)%>"> Document Format </option>
+      <option value="#">----------------</option>
+    <option value="<%=url_for(:controller => 'committee_roles', :action => 'list')%>"> <%="Table of Committee Role".pluralize%> </option>
+    <option value="<%=url_for(:controller => 'committee_roles', :action => 'block_list')%>"> <%="List of Committee Role".pluralize%> </option>
+
+    <option value="#">----------------</option>
+
+<!-- BEGIN-UID.user_actions -->
+
+<!-- END-UID.user_actions -->
+
+    </select>
+  </td>
+  <td class="context" width="40%">
+   <%=context_links(@committee_role)%>
+  </td>
+</tr>
+</table>
+</div>
+
+<% end %>
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   show_props_subview = 'show_properties'
+   show_rel_subview   = 'show_related'
+%>
+
+<!-- BEGIN-UID.user_ctrls -->
+
+<%
+   show_rel_subview   = 'show_related_custom'
+%>
+
+<!-- END-UID.user_ctrls -->
+
+<div class="show_view show_view_committee_role">   <!-- show_view -->
+
+    <p class="prev_next_links">
+    <%=link_to "previous", url_show(@committee_role.prev_item), :title => "Previous Committee Role", :style => "font-size:8pt;"%> 
+    | <%=link_to "next", url_show(@committee_role.next_item), :title => "Next Committee Role", :style => "font-size:8pt;"%>
+    </p>
+
+  <% if @show_item[:ft_show_props] %>
+    <div id="show_committee_role_props" class="show_props show_props_committee_role">   <!-- show_props -->
+
+<!-- BEGIN-UID.user_properties -->
+
+<!-- END-UID.user_properties -->
+
+       <%= render :partial => show_props_subview %>
+
+    </div>         <!-- show_props -->
+
+  <% end %>
+
+    <p class="spacer">&nbsp;</p>
+
+  <% if @show_item[:ft_show_rels] %>
+    <div id="show_committee_role_rels" class="show_related">
+
+<!-- BEGIN-UID.user_related_items -->
+<h3 class="rel_items_heading">Related Items</h3>
+<!-- END-UID.user_related_items -->
+
+       <%= render :partial => show_rel_subview %>
+
+    </div>  <!-- show_related -->
+
+  <% end %>
+
+</div>  <!-- show_view -->
+
+<!-- BEGIN-UID.userdivs -->
+
+<!-- END-UID.userdivs -->
+
+<% unless @embedded %>
+
+<div class="buttons_etc buttons_etc_bottom">
+<table class="buttons_etc_bottom_table" border="0" cellspacing="0">
+<tr>
+  <td width="60%" valign="top">
+    <%= js_button_to 'Modify', :controller => 'committee_roles', :action => 'edit', :id => @committee_role %> 
+    <select onchange="javascript: location = this[this.selectedIndex].value;">
+      <option value="#">Select an action...</option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'committee_roles', :action => 'show', :id => @committee_role.id)%>"> Normal Format </option>
+      <option value="<%=url_for(:controller => 'committee_roles', :action => 'show_as_doc', :id => @committee_role.id)%>"> Document Format </option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'committee_roles', :action => 'list')%>"> <%="Table of Committee Role".pluralize%> </option>
+      <option value="<%=url_for(:controller => 'committee_roles', :action => 'block_list')%>"> <%="List of Committee Role".pluralize%> </option>
+
+    <option value="#">----------------</option>
+
+
+
+    </select>
+  </td>
+  <td class="context" width="40%">
+   <%=context_links(@committee_role)%>
+  </td>
+</tr>
+</table>
+</div>
+
+<% end %>

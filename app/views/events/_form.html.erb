@@ -1,0 +1,65 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   @ft_view_section = {}
+
+   @edit_ctrl_cols = @edit_ctrl_cols || 60
+
+   @text_ctrl_rows = @text_ctrl_rows || 8
+   @text_ctrl_cols = @text_ctrl_cols || (@edit_ctrl_cols - 1)
+%>
+
+<!-- BEGIN-UID.user_vis_ctrls -->
+
+<!-- END-UID.user_vis_ctrls -->
+
+<%= error_messages_for 'event' %>
+
+<!--[form:event]-->
+<table class="aform_table">
+
+<% @ft_view_section[:year] = capture { %>
+<% if @show_item[:year] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="event_year">Year&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'event', 'year', :size => "14", :id => "focus" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:objectives] = capture { %>
+<% if @show_item[:objectives] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="event_objectives">Objectives</label></td>
+<td class="value">&nbsp;<%= text_area 'event', 'objectives', :rows => @text_ctrl_rows, :cols => @text_ctrl_cols %></td>
+</tr>
+<% end %>
+<% } %>
+
+<%     @ft_view_section_order = []
+       @ft_view_section_order << :year
+       @ft_view_section_order << :objectives
+%>
+
+<!-- BEGIN-UID.user_section_ordering -->
+
+<!-- END-UID.user_section_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+
+
+<!-- BEGIN-UID.user_fields -->
+
+<!-- END-UID.user_fields -->
+
+</table>
+
+
+<!--[eoform:event]-->

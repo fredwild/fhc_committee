@@ -1,0 +1,200 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   @ft_view_section = {}
+
+   @edit_ctrl_cols = @edit_ctrl_cols || 60
+
+   @text_ctrl_rows = @text_ctrl_rows || 8
+   @text_ctrl_cols = @text_ctrl_cols || (@edit_ctrl_cols - 1)
+%>
+
+<!-- BEGIN-UID.user_vis_ctrls -->
+
+<!-- END-UID.user_vis_ctrls -->
+
+<%= error_messages_for 'task_obj' %>
+
+<!--[form:task_obj]-->
+<table class="aform_table">
+
+<% @ft_view_section[:name] = capture { %>
+<% if @show_item[:name] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="task_obj_name">Name&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'task_obj', 'name', :size => [60,@edit_ctrl_cols].min, :maxlength => "60", :id => "focus" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:description] = capture { %>
+<% if @show_item[:description] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="task_obj_description">Description</label></td>
+<td class="value">&nbsp;<%= text_area 'task_obj', 'description', :rows => @text_ctrl_rows, :cols => @text_ctrl_cols %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:month_week] = capture { %>
+<% if @show_item[:month_week] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="task_obj_month_week">Month Week&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'task_obj', 'month_week', :size => "14" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:key_task] = capture { %>
+<% if @show_item[:key_task] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="task_obj_key_task">Key Task</label></td>
+<td class="value">&nbsp;<%= check_box 'task_obj', 'key_task' %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:seq_no] = capture { %>
+<% if @show_item[:seq_no] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="task_obj_seq_no">Seq No&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'task_obj', 'seq_no', :size => "14" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:month] = capture { %>
+<% if @show_item[:month] then %>
+
+    <!-- Month -->
+
+<tr class="aform_row">
+
+<td class="label">&nbsp;<label for="task_obj_tasks">Month</label></td>
+
+<td class="value">&nbsp;<%= 
+  @month_choices = (@month_choices || Month.choices_for(@task_obj,'month'))
+  current = (@task_obj.month && @task_obj.month.id)
+  options = options_for_select([["--select--",""]] + @month_choices.collect{|x| [ x.sname, x.id ]}, current)
+  select("task_obj", "month_month_id", options)
+%></td>
+
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:meeting] = capture { %>
+<% if @show_item[:meeting] then %>
+
+    <!-- Meeting -->
+
+<tr class="aform_row">
+
+<td class="label">&nbsp;<label for="task_obj_tasks_addressed">Meeting</label></td>
+
+<td class="value">&nbsp;<%= 
+  @meeting_choices = (@meeting_choices || Meeting.choices_for(@task_obj,'meeting'))
+  current = (@task_obj.meeting && @task_obj.meeting.id)
+  options = options_for_select([["--select--",""]] + @meeting_choices.collect{|x| [ x.sname, x.id ]}, current)
+  select("task_obj", "meeting_meeting_id", options)
+%></td>
+
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:predecessor] = capture { %>
+<% if @show_item[:predecessor] then %>
+
+    <!-- Predecessor -->
+
+<tr class="aform_row">
+
+<td class="label">&nbsp;<label for="task_obj_follow_on_tasks">Predecessor</label></td>
+
+<td class="value">&nbsp;<%= 
+  @predecessor_choices = (@predecessor_choices || TaskObj.choices_for(@task_obj,'predecessor'))
+  current = (@task_obj.predecessor && @task_obj.predecessor.id)
+  options = options_for_select([["--select--",""]] + @predecessor_choices.collect{|x| [ x.sname, x.id ]}, current)
+  select("task_obj", "predecessor_task_obj_id", options)
+%></td>
+
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:commitee] = capture { %>
+<% if @show_item[:commitee] then %>
+
+    <!-- Commitee -->
+
+<tr class="aform_row">
+
+<td class="label">&nbsp;<label for="task_obj_tasks">Commitee</label></td>
+
+<td class="value">&nbsp;<%= 
+  @commitee_choices = (@commitee_choices || Committee.choices_for(@task_obj,'commitee'))
+  current = (@task_obj.commitee && @task_obj.commitee.id)
+  options = options_for_select([["--select--",""]] + @commitee_choices.collect{|x| [ x.sname, x.id ]}, current)
+  select("task_obj", "commitee_committee_id", options)
+%></td>
+
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:committee_role] = capture { %>
+<% if @show_item[:committee_role] then %>
+
+    <!-- Committee Role -->
+
+<tr class="aform_row">
+
+<td class="label">&nbsp;<label for="task_obj_tasks">Committee Role</label></td>
+
+<td class="value">&nbsp;<%= 
+  @committee_role_choices = (@committee_role_choices || CommitteeRole.choices_for(@task_obj,'committee_role'))
+  current = (@task_obj.committee_role && @task_obj.committee_role.id)
+  options = options_for_select([["--select--",""]] + @committee_role_choices.collect{|x| [ x.sname, x.id ]}, current)
+  select("task_obj", "committee_role_committee_role_id", options)
+%></td>
+
+</tr>
+<% end %>
+<% } %>
+
+<%     @ft_view_section_order = []
+       @ft_view_section_order << :name
+       @ft_view_section_order << :description
+       @ft_view_section_order << :month_week
+       @ft_view_section_order << :key_task
+       @ft_view_section_order << :seq_no
+       @ft_view_section_order << :month
+       @ft_view_section_order << :meeting
+       @ft_view_section_order << :predecessor
+       @ft_view_section_order << :commitee
+       @ft_view_section_order << :committee_role
+%>
+
+<!-- BEGIN-UID.user_section_ordering -->
+
+<!-- END-UID.user_section_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+
+
+<!-- BEGIN-UID.user_fields -->
+
+<!-- END-UID.user_fields -->
+
+</table>
+
+
+<!--[eoform:task_obj]-->

@@ -1,0 +1,114 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   @ft_view_section = {}
+
+   dir_ind = params['direction'] || 'ASC'
+   asc_desc = Hash.new(dir_ind)
+   asc_desc[ params['order_by'].to_s ] = ( dir_ind['ASC'] ? 'DESC' : 'ASC')
+
+   darrow = Hash.new("")
+   darrow[params['order_by'].to_s] = (dir_ind == 'ASC' ? " &uarr;" : " &darr;")
+
+%>
+
+<div class="show_hide_subtable_text">
+<% listtext_op = session['list_text_toggles'] ? "show text" : "hide text" %> 
+<%= link_to listtext_op, {:controller => 'fast_ops', :action => 'toggle_list_text_toggle'}, :style => 'font-size:8pt;' %> |
+<% listimage_op = session['list_image_toggles'] ? "show images" : "hide images" %>
+<%= link_to listimage_op, {:controller => 'fast_ops', :action => 'toggle_list_image_toggle'}, :style => 'font-size:8pt;' %>
+</div>
+
+
+<!-- BEGIN-UID.user_ctrls -->
+
+<!-- END-UID.user_ctrls -->
+
+
+<% @ft_view_section[:assigned_committees] = capture { %>
+<% if @show_item[:assigned_committees] then %>
+
+  <!-- Committees Under Guidance -->
+
+  <a name="assigned_committees"></a>
+
+  <div id="show_rel_assigned_committees" class="show_rel show_rel_assigned_committees">                                                 <!-- div28 -->
+    <div id="show_rel_assigned_committees_label" class="rel_label"> Committees Under Guidance &nbsp; <%= show_hide('show/hide','show_rel_assigned_committees_value')%> </div>        <!-- div29 -->
+
+    <div id="show_rel_assigned_committees_value" class="rel_value">                                                                           <!-- div30 -->
+        <table class="detail" cellspacing="1">
+          <tr>
+            <th> <%= link_to "Code"+darrow['code'], { :controller => @role_assignment.ctrlr_name, :action => params[:action], :id => @role_assignment, :order_sublist => 'assigned_committees', :order_by => 'code', :direction => asc_desc['code'] }, :class => 'col_sorting_link' %> </th>
+            <th> <%= link_to "Name"+darrow['name'], { :controller => @role_assignment.ctrlr_name, :action => params[:action], :id => @role_assignment, :order_sublist => 'assigned_committees', :order_by => 'name', :direction => asc_desc['name'] }, :class => 'col_sorting_link' %> </th>
+            <th> <%= link_to "Picture"+darrow['picture'], { :controller => @role_assignment.ctrlr_name, :action => params[:action], :id => @role_assignment, :order_sublist => 'assigned_committees', :order_by => 'picture', :direction => asc_desc['picture'] }, :class => 'col_sorting_link' %> </th>
+            <th> <%= link_to "Seq No"+darrow['seq_no'], { :controller => @role_assignment.ctrlr_name, :action => params[:action], :id => @role_assignment, :order_sublist => 'assigned_committees', :order_by => 'seq_no', :direction => asc_desc['seq_no'] }, :class => 'col_sorting_link' %> </th>
+          <th>&nbsp;</th>
+          </tr>
+
+          <% prev_item = nil %>
+          <% for committee in (@assigned_committees || []) %>
+            <tr>
+            <td class="no_lf">
+              <% text = committee.code.to_s %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <%= link_to text, url_show(committee), :class => "identity_link" %> 
+            </td>
+
+            <td class="no_lf">
+              <% text = committee.name.to_s %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <%= text %> 
+            </td>
+
+            <td class="no_lf">
+              <% text = committee.picture.to_s %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <% if session['list_image_toggles'] && committee.picture && image_exist?(committee.picture) then %>
+                 <%= show_hide "show/hide","picture_attr_#{committee.id}"%>
+                 <div class="cell_text_popup" id="picture_attr_<%=committee.id%>" style="display:none;">
+                   <%= image_tag_or_crlink(committee.picture,'Picture') %>
+                 </div>
+              <% else %>
+                 <%= image_tag_or_crlink(committee.picture,'Picture') %>
+              <% end %>
+            </td>
+
+            <td class="no_lf">
+              <% text = committee.seq_no.to_s %>
+              <% text = "&nbsp;" if text.length == 0 %>
+              <%= text %> 
+            </td>
+
+      <% if prev_item then %>
+        <td style="text-align:center"><%= link_to "&uarr;", :controller => 'committees', :action => 'swap_seq_nos', :obj1_id => prev_item.id, :obj2_id => committee.id %></td>
+      <% else %>
+        <td>&nbsp;</td>
+      <% end %>
+            </tr>
+            <% prev_item = committee %>
+          <% end %>
+        </table>
+
+    </div>          <!-- div31 -->
+  </div>            <!-- div32 -->
+<% end %>
+<% } %>
+
+
+<% @ft_view_section_order = []
+   @ft_view_section_order << :assigned_committees
+%>
+
+<!-- BEGIN-UID.user_ordering -->
+
+<!-- END-UID.user_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+
